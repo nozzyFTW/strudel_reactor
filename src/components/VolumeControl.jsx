@@ -1,24 +1,52 @@
-import { ButtonGroup, Button, ToggleButton } from 'react-bootstrap';
+import { useState } from 'react';
+import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 
-export const VolumeControl = () => {
+export const VolumeControl = ({ trackNumber, soloExists }) => {
+    const [volume, setVolume] = useState(1);
+
+    const [isMute, setIsMute] = useState(false);
+
+    const [isSolo, setIsSolo] = useState(false);
+    const handleSoloUpdate = ({}) => {
+        if (!soloExists && isSolo) {
+            setIsSolo(true);
+            soloExists = true;
+        } else if (soloExists && !isSolo) {
+            setIsSolo(false);
+            soloExists = false;
+        }
+    };
+
     return (
         <div className="inline-flex">
-            <p>Track 1</p>
-            <div className="d-flex items-center">
+            Track {trackNumber}
+            <div className="d-flex align-items-center justify-content-between">
                 <Form.Range
-                    id="volume_1"
+                    id={`volume_${trackNumber}`}
                     min="0"
                     max="1"
                     step="0.1"
-                    value="1"
+                    value={volume}
                     style={{ width: '70%' }}
+                    disabled={isMute}
+                    onChange={(e) => setVolume(e.target.value)}
                 />
                 <ButtonGroup aria-label="Gain Buttons" style={{ width: '20%' }}>
-                    <ToggleButton id="solo_1" variant="outline-primary">
+                    <ToggleButton
+                        id={`solo_${trackNumber}`}
+                        variant={isSolo ? 'primary' : 'outline-primary'}
+                        size="sm"
+                        onClick={() => setIsSolo(!isSolo)}
+                    >
                         Solo
                     </ToggleButton>
-                    <ToggleButton id="mute_1" variant="outline-danger">
+                    <ToggleButton
+                        id={`mute_${trackNumber}`}
+                        variant={isMute ? 'danger' : 'outline-danger'}
+                        size="sm"
+                        onClick={() => setIsMute(!isMute)}
+                    >
                         Mute
                     </ToggleButton>
                 </ButtonGroup>
