@@ -45,7 +45,7 @@ export const VolumeControl = ({ trackNumber, trackName, soloExists }) => {
                         id={`mute_${trackNumber}`}
                         variant={isMuted ? 'danger' : 'outline-danger'}
                         size="sm"
-                        onClick={() => setIsMute(!isMute)}
+                        onClick={() => setIsMuted(!isMuted)}
                     >
                         Mute
                     </ToggleButton>
