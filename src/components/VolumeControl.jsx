@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 
-export const VolumeControl = ({ trackNumber, soloExists }) => {
+export const VolumeControl = ({ trackNumber, trackName, soloExists }) => {
     const [volume, setVolume] = useState(1);
 
-    const [isMute, setIsMute] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
 
     const [isSolo, setIsSolo] = useState(false);
     const handleSoloUpdate = ({}) => {
@@ -20,7 +20,7 @@ export const VolumeControl = ({ trackNumber, soloExists }) => {
 
     return (
         <div className="inline-flex">
-            Track {trackNumber}
+            Track {trackNumber} - {trackName}
             <div className="d-flex align-items-center justify-content-between">
                 <Form.Range
                     id={`volume_${trackNumber}`}
@@ -29,7 +29,7 @@ export const VolumeControl = ({ trackNumber, soloExists }) => {
                     step="0.1"
                     value={volume}
                     style={{ width: '70%' }}
-                    disabled={isMute}
+                    disabled={isMuted}
                     onChange={(e) => setVolume(e.target.value)}
                 />
                 <ButtonGroup aria-label="Gain Buttons" style={{ width: '20%' }}>
@@ -43,7 +43,7 @@ export const VolumeControl = ({ trackNumber, soloExists }) => {
                     </ToggleButton>
                     <ToggleButton
                         id={`mute_${trackNumber}`}
-                        variant={isMute ? 'danger' : 'outline-danger'}
+                        variant={isMuted ? 'danger' : 'outline-danger'}
                         size="sm"
                         onClick={() => setIsMute(!isMute)}
                     >

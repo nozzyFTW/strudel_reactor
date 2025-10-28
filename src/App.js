@@ -1,4 +1,5 @@
 import './App.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useEffect, useState } from 'react';
 
 import { Header } from './components/Header';
@@ -7,6 +8,7 @@ import { Settings } from './components/settings/Settings';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
+    const [tracks, setTracks] = useState([]);
 
     const handleProcessing = () => {
         let proc_text = document.getElementById('proc').value;
@@ -15,10 +17,22 @@ export const App = () => {
         globalEditor.setCode(proc_text_replaced);
     };
 
+    const extractTracks = () => {
+        const trackNameRegex = /^\s*(\w+):/;
+
+        globalEditor.code.split('\n').forEach((line) => {
+            const match = line.match(trackNameRegex);
+            if (match && !tracks.includes(match[1])) {
+                setTracks((prevTracks) => [...prevTracks, match[1]]);
+            }
+        });
+    };
+
     // Ensure processing occurs only once globalEditor is set
     useEffect(() => {
         if (globalEditor) {
             handleProcessing();
+            extractTracks();
         }
     }, [globalEditor]);
 
@@ -42,6 +56,8 @@ export const App = () => {
                             <Settings
                                 setGlobalEditor={setGlobalEditor}
                                 handleProcessing={handleProcessing}
+                                tracks={tracks}
+                                extractTracks={extractTracks}
                             />
                         </div>
                     </div>
