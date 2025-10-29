@@ -16,10 +16,13 @@ export const Settings = ({ setGlobalEditor, handleProcessing, tracks, extractTra
                 <Accordion.Header>Text to Preprocess</Accordion.Header>
                 <Accordion.Body>
                     <div className="row mb-2">
-                        <div className="col-md-6 mb-2">
+                        <div className="col-md-5">
                             <SetCPS />
                         </div>
-                        <div className="col-md-6 mb-2">
+                        <div
+                            className="col-md-7 d-flex justify-content-end"
+                            style={{ height: '36px' }}
+                        >
                             <JsonButtons />
                         </div>
                     </div>
@@ -32,11 +35,11 @@ export const Settings = ({ setGlobalEditor, handleProcessing, tracks, extractTra
             <Accordion.Item eventKey="1">
                 <Accordion.Header onClick={extractTracks}>Volume</Accordion.Header>
                 <Accordion.Body>
-                    {Array.from({ length: tracks.length }, (_, i) => (
+                    {tracks.map((track, i) => (
                         <VolumeControl
                             key={i}
                             trackNumber={i + 1}
-                            trackName={tracks[i]}
+                            trackName={track}
                             soloExists={soloExists}
                         />
                     ))}
