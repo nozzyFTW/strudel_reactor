@@ -10,9 +10,9 @@ export const VolumeControl = ({
     handleProcPlay,
     muteMap,
     setMuteMap,
+    volumeMap,
+    setVolumeMap,
 }) => {
-    const [volume, setVolume] = useState(1);
-
     const [isSolo, setIsSolo] = useState(false);
     const handleSoloUpdate = ({}) => {
         if (!soloExists && isSolo) {
@@ -32,6 +32,14 @@ export const VolumeControl = ({
         handleProcPlay();
     };
 
+    const handleVolumeChange = (newVolume) => {
+        setVolumeMap((prevVolumeMap) => ({
+            ...prevVolumeMap,
+            [trackName]: newVolume,
+        }));
+        handleProcPlay();
+    };
+
     return (
         <div className="inline-flex">
             Track {trackNumber} - {trackName}
@@ -41,10 +49,10 @@ export const VolumeControl = ({
                     min="0"
                     max="1"
                     step="0.1"
-                    value={volume}
+                    value={volumeMap?.[trackName] || 1}
                     style={{ width: '70%' }}
                     disabled={muteMap[trackName]}
-                    onChange={(e) => setVolume(e.target.value)}
+                    onChange={(e) => handleVolumeChange(e.target.value)}
                 />
                 <ButtonGroup aria-label="Gain Buttons" style={{ width: '20%' }}>
                     <ToggleButton
