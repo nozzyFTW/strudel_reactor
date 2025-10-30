@@ -3,6 +3,7 @@ import { ButtonGroup, Button } from 'react-bootstrap';
 export const ProcButtons = ({ globalEditor, handleProcessing }) => {
     const handleProcPlayButtonClick = () => {
         if (globalEditor != null) {
+            console.log(globalEditor);
             handleProcessing();
             globalEditor.evaluate();
         }

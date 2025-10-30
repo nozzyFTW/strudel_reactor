@@ -12,30 +12,18 @@ export const App = () => {
 
     // Map track names to mute states
     const [muteMap, setMuteMap] = useState({});
-    const [volumeMap, setVolumeMap] = useState({});
 
     const handleProcessing = () => {
-        console.log('Processing with tracks:', tracks);
         let proc_text = document.getElementById('proc').value;
         let proc_text_replaced = proc_text;
+
         if (tracks.length === 0) {
-            proc_text_replaced = proc_text_replaced.replaceAll(
-                /<([A-Za-z][A-Za-z0-9_]*)_mute>/g,
-                ''
-            );
-            proc_text_replaced = proc_text_replaced.replaceAll(
-                /<([A-Za-z][A-Za-z0-9_]*)_volume>/g,
-                ''
-            );
+            proc_text_replaced = proc_text.replaceAll(/<([A-Za-z][A-Za-z0-9_]*)_mute>/g, '');
         } else {
             tracks.forEach((track) => {
                 proc_text_replaced = proc_text_replaced.replace(
                     `<${track}_mute>`,
-                    processText(track, 'mute')
-                );
-                proc_text_replaced = proc_text_replaced.replace(
-                    `<${track}_volume>`,
-                    processText(track, 'volume')
+                    processText(track)
                 );
             });
         }
@@ -73,13 +61,6 @@ export const App = () => {
                     [track]: false,
                 }));
             }
-
-            if (!(track in volumeMap)) {
-                setVolumeMap((prevVolumeMap) => ({
-                    ...prevVolumeMap,
-                    [track]: 1,
-                }));
-            }
         });
     };
 
@@ -90,13 +71,14 @@ export const App = () => {
         }
     }, [globalEditor]);
 
-    const processText = (track, action) => {
+    const processText = (track) => {
         let replace = '';
-        if (muteMap[track] && action === 'mute') {
+        if (muteMap[track]) {
             replace = '_';
-        } else if (volumeMap[track] && action === 'volume') {
-            replace = `.postgain(${volumeMap[track]})`;
         }
+        // if (document.getElementById('flexRadioDefault2').checked) {
+        //     replace = '_';
+        // }
         return replace;
     };
 
@@ -114,10 +96,9 @@ export const App = () => {
                                 handleProcessing={handleProcessing}
                                 handleProcPlay={handleProcPlay}
                                 tracks={tracks}
+                                extractTracks={extractTracks}
                                 muteMap={muteMap}
                                 setMuteMap={setMuteMap}
-                                volumeMap={volumeMap}
-                                setVolumeMap={setVolumeMap}
                             />
                         </div>
                     </div>
