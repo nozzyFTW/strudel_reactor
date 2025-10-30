@@ -12,9 +12,10 @@ export const Settings = ({
     handleProcessing,
     handleProcPlay,
     tracks,
-    extractTracks,
     muteMap,
     setMuteMap,
+    volumeMap,
+    setVolumeMap,
 }) => {
     const soloExists = false;
 
@@ -31,7 +32,11 @@ export const Settings = ({
                             className="col-md-7 d-flex justify-content-end"
                             style={{ height: '36px' }}
                         >
-                            <JsonButtons />
+                            <JsonButtons
+                                volumeMap={volumeMap}
+                                muteMap={muteMap}
+                                handleProcessing={handleProcessing}
+                            />
                         </div>
                     </div>
                     <ProcEditor
@@ -52,6 +57,8 @@ export const Settings = ({
                             handleProcPlay={handleProcPlay}
                             muteMap={muteMap}
                             setMuteMap={setMuteMap}
+                            volumeMap={volumeMap}
+                            setVolumeMap={setVolumeMap}
                         />
                     ))}
                 </Accordion.Body>

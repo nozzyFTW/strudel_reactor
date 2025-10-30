@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-export const JsonButtons = () => {
+export const JsonButtons = ({ volumeMap, muteMap, handleProcessing }) => {
     const handleSave = () => {
         // Eventual JSON Structure:
         //
@@ -13,11 +13,18 @@ export const JsonButtons = () => {
         //         track2: ...,
         //         ...
         //     }
+        //     MuteStatus: {
+        //         track1: ...,
+        //         track2: ...,
+        //         ...
+        //     }
         // }
 
         let json = {};
         const val = document.getElementById('proc').value;
         json['ProcText'] = val;
+        json['Volumes'] = volumeMap;
+        json['MuteStatus'] = muteMap;
 
         json = JSON.stringify(json);
         const blob = new Blob([json], { type: 'application/json' });
@@ -29,9 +36,7 @@ export const JsonButtons = () => {
         const url = URL.createObjectURL(blob);
         a.href = url;
         a.download = 'strudel_reactor_data.json';
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
         URL.revokeObjectURL(url);
     };
 
@@ -51,6 +56,17 @@ export const JsonButtons = () => {
                 if (json.ProcText) {
                     document.getElementById('proc').value = json.ProcText;
                 }
+                if (json.Volumes) {
+                    for (const [track, volume] of Object.entries(json.Volumes)) {
+                        volumeMap[track] = volume;
+                    }
+                }
+                if (json.MuteStatus) {
+                    for (const [track, muteStatus] of Object.entries(json.MuteStatus)) {
+                        muteMap[track] = muteStatus;
+                    }
+                }
+                handleProcessing();
             };
             reader.readAsText(file);
         };
