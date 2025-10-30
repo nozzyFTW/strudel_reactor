@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
+import { Dial } from './Dial';
 
-export const VolumeControl = ({ trackNumber, trackName, soloExists }) => {
+export const VolumeControl = ({
+    trackNumber,
+    trackName,
+    soloExists,
+    handleProcPlay,
+    muteMap,
+    setMuteMap,
+}) => {
     const [volume, setVolume] = useState(1);
-
-    const [isMuted, setIsMuted] = useState(false);
 
     const [isSolo, setIsSolo] = useState(false);
     const handleSoloUpdate = ({}) => {
@@ -16,6 +22,14 @@ export const VolumeControl = ({ trackNumber, trackName, soloExists }) => {
             setIsSolo(false);
             soloExists = false;
         }
+    };
+
+    const handleMuteUpdate = () => {
+        setMuteMap((prevMuteMap) => ({
+            ...prevMuteMap,
+            [trackName]: !prevMuteMap[trackName],
+        }));
+        handleProcPlay();
     };
 
     return (
@@ -29,7 +43,7 @@ export const VolumeControl = ({ trackNumber, trackName, soloExists }) => {
                     step="0.1"
                     value={volume}
                     style={{ width: '70%' }}
-                    disabled={isMuted}
+                    disabled={muteMap[trackName]}
                     onChange={(e) => setVolume(e.target.value)}
                 />
                 <ButtonGroup aria-label="Gain Buttons" style={{ width: '20%' }}>
@@ -42,10 +56,10 @@ export const VolumeControl = ({ trackNumber, trackName, soloExists }) => {
                         Solo
                     </ToggleButton>
                     <ToggleButton
-                        id={`mute_${trackNumber}`}
-                        variant={isMuted ? 'danger' : 'outline-danger'}
+                        id={`${trackName}_mute`}
+                        variant={muteMap[trackName] ? 'danger' : 'outline-danger'}
                         size="sm"
-                        onClick={() => setIsMuted(!isMuted)}
+                        onClick={handleMuteUpdate}
                     >
                         Mute
                     </ToggleButton>
