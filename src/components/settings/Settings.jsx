@@ -7,7 +7,15 @@ import { JsonButtons } from '../JsonButtons';
 import { SetCPS } from '../SetCPS';
 
 // TODO: instruments will be updated with state from another component later
-export const Settings = ({ setGlobalEditor, handleProcessing, tracks, extractTracks }) => {
+export const Settings = ({
+    setGlobalEditor,
+    handleProcessing,
+    handleProcPlay,
+    tracks,
+    extractTracks,
+    muteMap,
+    setMuteMap,
+}) => {
     const soloExists = false;
 
     return (
@@ -33,7 +41,7 @@ export const Settings = ({ setGlobalEditor, handleProcessing, tracks, extractTra
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
-                <Accordion.Header onClick={extractTracks}>Volume</Accordion.Header>
+                <Accordion.Header>Volume</Accordion.Header>
                 <Accordion.Body>
                     {tracks.map((track, i) => (
                         <VolumeControl
@@ -41,6 +49,9 @@ export const Settings = ({ setGlobalEditor, handleProcessing, tracks, extractTra
                             trackNumber={i + 1}
                             trackName={track}
                             soloExists={soloExists}
+                            handleProcPlay={handleProcPlay}
+                            muteMap={muteMap}
+                            setMuteMap={setMuteMap}
                         />
                     ))}
                 </Accordion.Body>
