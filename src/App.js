@@ -1,128 +1,69 @@
 import './App.css';
-import { useEffect, useRef } from 'react';
-import { StrudelMirror } from '@strudel/codemirror';
-import { evalScope } from '@strudel/core';
-import { drawPianoroll } from '@strudel/draw';
-import { initAudioOnFirstClick } from '@strudel/webaudio';
-import { transpiler } from '@strudel/transpiler';
-import { getAudioContext, webaudioOutput, registerSynthSounds } from '@strudel/webaudio';
-import { registerSoundfonts } from '@strudel/soundfonts';
-import { stranger_tune } from './tunes';
-import console_monkey_patch, { getD3Data } from './console-monkey-patch';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import { useEffect, useState } from 'react';
 
-import { ProcButtons } from './components/ProcButtons';
-import { PlayButtons } from './components/PlayButtons';
-import { ProcEditor } from './components/ProcEditor';
+import { Header } from './components/Header';
 import { StrudelEditor } from './components/StrudelEditor';
 import { Settings } from './components/settings/Settings';
 
-let globalEditor = null;
+export const App = () => {
+    const [globalEditor, setGlobalEditor] = useState(null);
+    const [tracks, setTracks] = useState([]);
 
-const handleD3Data = (event) => {
-    console.log(event.detail);
-};
+    const handleProcessing = () => {
+        let proc_text = document.getElementById('proc').value;
+        let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', processText);
+        processText(proc_text);
+        globalEditor.setCode(proc_text_replaced);
+    };
 
-export function SetupButtons() {
-    document.getElementById('play').addEventListener('click', () => globalEditor.evaluate());
-    document.getElementById('stop').addEventListener('click', () => globalEditor.stop());
-    document.getElementById('process').addEventListener('click', () => {
-        Proc();
-    });
-    document.getElementById('process_play').addEventListener('click', () => {
-        if (globalEditor != null) {
-            Proc();
-            globalEditor.evaluate();
-        }
-    });
-}
+    const extractTracks = () => {
+        const trackNameRegex = /^\s*(\w+):/;
 
-export function ProcAndPlay() {
-    if (globalEditor != null && globalEditor.repl.state.started == true) {
-        console.log(globalEditor);
-        Proc();
-        globalEditor.evaluate();
-    }
-}
+        globalEditor.code.split('\n').forEach((line) => {
+            const match = line.match(trackNameRegex);
+            if (match && !tracks.includes(match[1])) {
+                setTracks((prevTracks) => [...prevTracks, match[1]]);
+            }
+        });
+    };
 
-export function Proc() {
-    // let proc_text = document.getElementById('proc').value;
-    // let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', ProcessText);
-    // ProcessText(proc_text);
-    // globalEditor.setCode(proc_text_replaced);
-}
-
-export function ProcessText(match, ...args) {
-    // let replace = '';
-    // if (document.getElementById('flexRadioDefault2').checked) {
-    //     replace = '_';
-    // }
-    // return replace;
-}
-
-export default function StrudelDemo() {
-    const hasRun = useRef(false);
-
+    // Ensure processing occurs only once globalEditor is set
     useEffect(() => {
-        if (!hasRun.current) {
-            document.addEventListener('d3Data', handleD3Data);
-            console_monkey_patch();
-            hasRun.current = true;
-            //Code copied from example: https://codeberg.org/uzu/strudel/src/branch/main/examples/codemirror-repl
-            //init canvas
-            const canvas = document.getElementById('roll');
-            canvas.width = canvas.width * 2;
-            canvas.height = canvas.height * 2;
-            const drawContext = canvas.getContext('2d');
-            const drawTime = [-2, 2]; // time window of drawn haps
-            globalEditor = new StrudelMirror({
-                defaultOutput: webaudioOutput,
-                getTime: () => getAudioContext().currentTime,
-                transpiler,
-                root: document.getElementById('editor'),
-                drawTime,
-                onDraw: (haps, time) =>
-                    drawPianoroll({ haps, time, ctx: drawContext, drawTime, fold: 0 }),
-                prebake: async () => {
-                    initAudioOnFirstClick(); // needed to make the browser happy (don't await this here..)
-                    const loadModules = evalScope(
-                        import('@strudel/core'),
-                        import('@strudel/draw'),
-                        import('@strudel/mini'),
-                        import('@strudel/tonal'),
-                        import('@strudel/webaudio')
-                    );
-                    await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
-                },
-            });
-
-            document.getElementById('proc').value = stranger_tune;
-            SetupButtons();
-            Proc();
+        if (globalEditor) {
+            handleProcessing();
+            extractTracks();
         }
-    }, []);
+    }, [globalEditor]);
+
+    const processText = () => {
+        let replace = '';
+        // if (document.getElementById('flexRadioDefault2').checked) {
+        //     replace = '_';
+        // }
+        return replace;
+    };
 
     return (
-        <div>
-            <h2>Strudel Demo</h2>
-            <main>
-                <div className="container-fluid">
-                    <div className="row">
-                        <ProcEditor />
-                        <div className="col-md-4">
-                            <nav>
-                                <ProcButtons />
-                                <br />
-                                <PlayButtons />
-                            </nav>
+        <>
+            <Header globalEditor={globalEditor} handleProcessing={handleProcessing} />
+
+            <div>
+                <main>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <StrudelEditor />
+                            <Settings
+                                setGlobalEditor={setGlobalEditor}
+                                handleProcessing={handleProcessing}
+                                tracks={tracks}
+                                extractTracks={extractTracks}
+                            />
                         </div>
                     </div>
-                    <div className="row">
-                        <StrudelEditor />
-                        <Settings />
-                    </div>
-                </div>
-                <canvas id="roll"></canvas>
-            </main>
-        </div>
+                    <canvas id="roll"></canvas>
+                </main>
+            </div>
+        </>
     );
-}
+};
