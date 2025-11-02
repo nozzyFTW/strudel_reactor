@@ -12,12 +12,22 @@ export const Settings = ({
     handleProcessing,
     handleProcPlay,
     tracks,
+    tracksInitialised,
+    setTracksInitialised,
+    extractTracks,
     muteMap,
     setMuteMap,
+    soloTrack,
+    setSoloTrack,
     volumeMap,
     setVolumeMap,
 }) => {
-    const soloExists = false;
+    const initTracks = () => {
+        if (tracksInitialised) return;
+
+        extractTracks();
+        setTracksInitialised(true);
+    };
 
     return (
         <Accordion flush className="col-md-6" defaultActiveKey={['0']} alwaysOpen>
@@ -46,17 +56,20 @@ export const Settings = ({
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
-                <Accordion.Header>Volume</Accordion.Header>
+                <Accordion.Header id="volume-header" onClick={initTracks}>
+                    Volume
+                </Accordion.Header>
                 <Accordion.Body>
                     {tracks.map((track, i) => (
                         <VolumeControl
                             key={i}
                             trackNumber={i + 1}
                             trackName={track}
-                            soloExists={soloExists}
                             handleProcPlay={handleProcPlay}
                             muteMap={muteMap}
                             setMuteMap={setMuteMap}
+                            soloTrack={soloTrack}
+                            setSoloTrack={setSoloTrack}
                             volumeMap={volumeMap}
                             setVolumeMap={setVolumeMap}
                         />
