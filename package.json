@@ -19,6 +19,7 @@
     "bootstrap-icons": "^1.13.1",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
+    "react-circular-slider-svg": "^0.4.0",
     "react-dom": "^19.1.1",
     "react-scripts": "5.0.1",
     "sass": "^1.93.2",

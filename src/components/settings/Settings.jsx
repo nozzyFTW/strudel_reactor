@@ -5,6 +5,7 @@ import { VolumeControl } from '../VolumeControl';
 import { ProcEditor } from '../ProcEditor';
 import { JsonButtons } from '../JsonButtons';
 import { SetCPS } from '../SetCPS';
+import { ReverbControls } from '../ReverbControls';
 
 // TODO: instruments will be updated with state from another component later
 export const Settings = ({
@@ -30,8 +31,13 @@ export const Settings = ({
     };
 
     return (
-        <Accordion flush className="col-md-6" defaultActiveKey={['0']} alwaysOpen>
-            <Accordion.Item className={styles.header} eventKey="0">
+        <Accordion
+            flush
+            className={`col-md-6 ${styles.accordionDark}`}
+            defaultActiveKey={['0']}
+            alwaysOpen
+        >
+            <Accordion.Item eventKey="0">
                 <Accordion.Header>Text to Preprocess</Accordion.Header>
                 <Accordion.Body>
                     <div className="row mb-2">
@@ -56,9 +62,7 @@ export const Settings = ({
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
-                <Accordion.Header id="volume-header" onClick={initTracks}>
-                    Volume
-                </Accordion.Header>
+                <Accordion.Header onClick={initTracks}>Volume</Accordion.Header>
                 <Accordion.Body>
                     {tracks.map((track, i) => (
                         <VolumeControl
@@ -77,8 +81,25 @@ export const Settings = ({
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="2">
-                <Accordion.Header>Coming Soon...</Accordion.Header>
-                <Accordion.Body></Accordion.Body>
+                <Accordion.Header>Reverb</Accordion.Header>
+                <Accordion.Body>
+                    <Accordion>
+                        <Accordion.Item eventKey="0">
+                            <Accordion.Header>Global Reverb</Accordion.Header>
+                            <Accordion.Body>
+                                <ReverbControls />
+                            </Accordion.Body>
+                        </Accordion.Item>
+                        {tracks.map((track, i) => (
+                            <Accordion.Item key={i} eventKey={`${i + 1}`}>
+                                <Accordion.Header>{track}</Accordion.Header>
+                                <Accordion.Body>
+                                    <ReverbControls />
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        ))}
+                    </Accordion>
+                </Accordion.Body>
             </Accordion.Item>
         </Accordion>
     );

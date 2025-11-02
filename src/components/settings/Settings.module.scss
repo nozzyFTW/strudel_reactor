@@ -1,3 +1,9 @@
-.header {
-    background-color: #222;
+.accordionDark {
+    --bs-accordion-bg: #222 !important;
+    --bs-accordion-color: #fff !important;
+    --bs-accordion-btn-bg: #222 !important;
+    --bs-accordion-btn-color: #fff !important;
+    --bs-accordion-border-color: rgba(255, 255, 255, 0.15) !important;
+    --bs-accordion-active-bg: #333 !important;
+    --bs-accordion-active-color: #fff !important;
 }
