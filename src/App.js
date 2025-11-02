@@ -9,9 +9,11 @@ import { Settings } from './components/settings/Settings';
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
     const [tracks, setTracks] = useState([]);
+    const [tracksInitialised, setTracksInitialised] = useState(false);
 
     // Map track names to mute states
     const [muteMap, setMuteMap] = useState({});
+    const [soloTrack, setSoloTrack] = useState('');
     const [volumeMap, setVolumeMap] = useState({});
 
     const handleProcessing = () => {
@@ -114,8 +116,13 @@ export const App = () => {
                                 handleProcessing={handleProcessing}
                                 handleProcPlay={handleProcPlay}
                                 tracks={tracks}
+                                tracksInitialised={tracksInitialised}
+                                setTracksInitialised={setTracksInitialised}
+                                extractTracks={extractTracks}
                                 muteMap={muteMap}
                                 setMuteMap={setMuteMap}
+                                soloTrack={soloTrack}
+                                setSoloTrack={setSoloTrack}
                                 volumeMap={volumeMap}
                                 setVolumeMap={setVolumeMap}
                             />

@@ -2,26 +2,40 @@ import { useState } from 'react';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Dial } from './Dial';
+import { h } from '@strudel/draw';
 
 export const VolumeControl = ({
     trackNumber,
     trackName,
-    soloExists,
     handleProcPlay,
     muteMap,
     setMuteMap,
+    soloTrack,
+    setSoloTrack,
     volumeMap,
     setVolumeMap,
 }) => {
-    const [isSolo, setIsSolo] = useState(false);
-    const handleSoloUpdate = ({}) => {
-        if (!soloExists && isSolo) {
-            setIsSolo(true);
-            soloExists = true;
-        } else if (soloExists && !isSolo) {
-            setIsSolo(false);
-            soloExists = false;
+    const handleSoloUpdate = (status) => {
+        if (status) {
+            for (const track in muteMap) {
+                if (track !== trackName) {
+                    setMuteMap((prevMuteMap) => ({
+                        ...prevMuteMap,
+                        [track]: true,
+                    }));
+                }
+            }
+            setSoloTrack(trackName);
+        } else {
+            for (const track in muteMap) {
+                setMuteMap((prevMuteMap) => ({
+                    ...prevMuteMap,
+                    [track]: false,
+                }));
+            }
+            setSoloTrack('');
         }
+        handleProcPlay();
     };
 
     const handleMuteUpdate = () => {
@@ -56,10 +70,11 @@ export const VolumeControl = ({
                 />
                 <ButtonGroup aria-label="Gain Buttons" style={{ width: '20%' }}>
                     <ToggleButton
-                        id={`solo_${trackNumber}`}
-                        variant={isSolo ? 'primary' : 'outline-primary'}
+                        id={`${trackName}_solo`}
+                        variant={soloTrack === trackName ? 'primary' : 'outline-primary'}
                         size="sm"
-                        onClick={() => setIsSolo(!isSolo)}
+                        onClick={() => handleSoloUpdate(soloTrack !== trackName)}
+                        disabled={!!soloTrack && soloTrack !== trackName}
                     >
                         Solo
                     </ToggleButton>
