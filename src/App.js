@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { StrudelEditor } from './components/StrudelEditor';
 import { Settings } from './components/settings/Settings';
+import { rev } from '@strudel/core';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
@@ -15,9 +16,9 @@ export const App = () => {
     const [muteMap, setMuteMap] = useState({});
     const [soloTrack, setSoloTrack] = useState('');
     const [volumeMap, setVolumeMap] = useState({});
+    const [reverbSettings, setReverbSettings] = useState({});
 
     const handleProcessing = () => {
-        console.log('Processing with tracks:', tracks);
         let proc_text = document.getElementById('proc').value;
         let proc_text_replaced = proc_text;
         if (tracks.length === 0) {
@@ -29,6 +30,10 @@ export const App = () => {
                 /<([A-Za-z][A-Za-z0-9_]*)_volume>/g,
                 ''
             );
+            proc_text_replaced = proc_text_replaced.replaceAll(
+                /<([A-Za-z][A-Za-z0-9_]*)_reverb>/g,
+                ''
+            );
         } else {
             tracks.forEach((track) => {
                 proc_text_replaced = proc_text_replaced.replace(
@@ -38,6 +43,10 @@ export const App = () => {
                 proc_text_replaced = proc_text_replaced.replace(
                     `<${track}_volume>`,
                     processText(track, 'volume')
+                );
+                proc_text_replaced = proc_text_replaced.replace(
+                    `<${track}_reverb>`,
+                    processText(track, 'reverb')
                 );
             });
         }
@@ -98,6 +107,20 @@ export const App = () => {
             replace = '_';
         } else if (volumeMap[track] && action === 'volume') {
             replace = `.postgain(${volumeMap[track]})`;
+        } else if (reverbSettings[track] && action === 'reverb') {
+            const settings = reverbSettings[track];
+            if (settings.room) {
+                replace += `.room(${settings.room})`;
+            }
+            if (settings.lpf) {
+                replace += `.lpf(${settings.lpf})`;
+            }
+            if (settings.roomSize) {
+                replace += `.roomSize(${settings.roomSize})`;
+            }
+            if (settings.roomFade) {
+                replace += `.roomFade(${settings.roomFade})`;
+            }
         }
         return replace;
     };
@@ -125,6 +148,8 @@ export const App = () => {
                                 setSoloTrack={setSoloTrack}
                                 volumeMap={volumeMap}
                                 setVolumeMap={setVolumeMap}
+                                reverbSettings={reverbSettings}
+                                setReverbSettings={setReverbSettings}
                             />
                         </div>
                     </div>

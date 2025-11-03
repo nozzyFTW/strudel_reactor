@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { CircularSliderWithChildren } from 'react-circular-slider-svg';
 
-export const Dial = ({ effectType, minValue, maxValue }) => {
+export const Dial = ({ effectType, minValue, maxValue, handler }) => {
     const [value, setValue] = useState(0);
 
     return (
         <CircularSliderWithChildren
             handle1={{
                 value: value,
-                onChange: (v) => setValue(v),
+                onChange: (v) => {
+                    setValue(v);
+                    handler(v);
+                },
             }}
             arcColor="#690"
             startAngle={90}

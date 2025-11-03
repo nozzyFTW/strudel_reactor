@@ -7,7 +7,6 @@ import { JsonButtons } from '../JsonButtons';
 import { SetCPS } from '../SetCPS';
 import { ReverbControls } from '../ReverbControls';
 
-// TODO: instruments will be updated with state from another component later
 export const Settings = ({
     setGlobalEditor,
     handleProcessing,
@@ -22,6 +21,8 @@ export const Settings = ({
     setSoloTrack,
     volumeMap,
     setVolumeMap,
+    reverbSettings,
+    setReverbSettings,
 }) => {
     const initTracks = () => {
         if (tracksInitialised) return;
@@ -87,14 +88,20 @@ export const Settings = ({
                         <Accordion.Item eventKey="0">
                             <Accordion.Header>Global Reverb</Accordion.Header>
                             <Accordion.Body>
-                                <ReverbControls />
+                                <ReverbControls
+                                    trackName={'global'}
+                                    setReverbSettings={setReverbSettings}
+                                />
                             </Accordion.Body>
                         </Accordion.Item>
                         {tracks.map((track, i) => (
                             <Accordion.Item key={i} eventKey={`${i + 1}`}>
                                 <Accordion.Header>{track}</Accordion.Header>
                                 <Accordion.Body>
-                                    <ReverbControls />
+                                    <ReverbControls
+                                        trackName={track}
+                                        setReverbSettings={setReverbSettings}
+                                    />
                                 </Accordion.Body>
                             </Accordion.Item>
                         ))}
