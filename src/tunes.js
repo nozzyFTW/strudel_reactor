@@ -93,6 +93,8 @@ stack(
   .speed(0.5)
   .rarely(jux(rev)),
 )<drums2_reverb><drums2_volume>
+
+<global_reverb>
 //Remixed and reproduced from Algorave Dave's code found here: https://www.youtube.com/watch?v=ZCcpWzhekEY
 // all(x => x.gain(mouseX.range(0,1)))
 // all(x => x.log())

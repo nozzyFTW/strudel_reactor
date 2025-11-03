@@ -30,12 +30,12 @@ export const ReverbControls = ({ trackName, setReverbSettings }) => {
         }));
     };
 
-    const handleLPFChange = (newValue) => {
+    const handleRoomLowPassChange = (newValue) => {
         setReverbSettings((prevSettings) => ({
             ...prevSettings,
             [trackName]: {
                 ...prevSettings[trackName],
-                lpf: newValue,
+                roomLowPass: newValue,
             },
         }));
     };
@@ -44,7 +44,7 @@ export const ReverbControls = ({ trackName, setReverbSettings }) => {
         { name: 'Room', min: 0, max: 1, handlerFn: handleRoomChange },
         { name: 'Room Size', min: 0, max: 10, handlerFn: handleRoomSizeChange },
         { name: 'Room Fade', min: 0, max: 20, handlerFn: handleRoomFadeChange },
-        { name: 'LPF', min: 0, max: 20000, handlerFn: handleLPFChange },
+        { name: 'Low Pass', min: 0, max: 20000, handlerFn: handleRoomLowPassChange },
     ];
 
     return (

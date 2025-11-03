@@ -52,6 +52,7 @@ export const Settings = ({
                             <JsonButtons
                                 volumeMap={volumeMap}
                                 muteMap={muteMap}
+                                reverbSettings={reverbSettings}
                                 handleProcessing={handleProcessing}
                             />
                         </div>
@@ -89,7 +90,7 @@ export const Settings = ({
                             <Accordion.Header>Global Reverb</Accordion.Header>
                             <Accordion.Body>
                                 <ReverbControls
-                                    trackName={'global'}
+                                    trackName="global"
                                     setReverbSettings={setReverbSettings}
                                 />
                             </Accordion.Body>
