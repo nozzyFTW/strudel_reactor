@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-export const JsonButtons = ({ volumeMap, muteMap, handleProcessing }) => {
+export const JsonButtons = ({ volumeMap, muteMap, reverbSettings, handleProcessing }) => {
     const handleSave = () => {
         // Eventual JSON Structure:
         //
@@ -12,10 +12,25 @@ export const JsonButtons = ({ volumeMap, muteMap, handleProcessing }) => {
         //         track1: ...,
         //         track2: ...,
         //         ...
-        //     }
+        //     },
         //     MuteStatus: {
         //         track1: ...,
         //         track2: ...,
+        //         ...
+        //     },
+        //     ReverbSettings: {
+        //         track1: {
+        //             room: ...,
+        //             roomSize: ...,
+        //             roomFade: ...,
+        //             roomLowPass: ...,
+        //         },
+        //         track2: {
+        //             room: ...,
+        //             roomSize: ...,
+        //             roomFade: ...,
+        //             roomLowPass: ...,
+        //         },
         //         ...
         //     }
         // }
@@ -25,6 +40,7 @@ export const JsonButtons = ({ volumeMap, muteMap, handleProcessing }) => {
         json['ProcText'] = val;
         json['Volumes'] = volumeMap;
         json['MuteStatus'] = muteMap;
+        json['ReverbSettings'] = reverbSettings;
 
         json = JSON.stringify(json);
         const blob = new Blob([json], { type: 'application/json' });

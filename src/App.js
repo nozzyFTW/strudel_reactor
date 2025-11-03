@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { StrudelEditor } from './components/StrudelEditor';
 import { Settings } from './components/settings/Settings';
+import { rev } from '@strudel/core';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
@@ -15,9 +16,9 @@ export const App = () => {
     const [muteMap, setMuteMap] = useState({});
     const [soloTrack, setSoloTrack] = useState('');
     const [volumeMap, setVolumeMap] = useState({});
+    const [reverbSettings, setReverbSettings] = useState({});
 
     const handleProcessing = () => {
-        console.log('Processing with tracks:', tracks);
         let proc_text = document.getElementById('proc').value;
         let proc_text_replaced = proc_text;
         if (tracks.length === 0) {
@@ -27,6 +28,10 @@ export const App = () => {
             );
             proc_text_replaced = proc_text_replaced.replaceAll(
                 /<([A-Za-z][A-Za-z0-9_]*)_volume>/g,
+                ''
+            );
+            proc_text_replaced = proc_text_replaced.replaceAll(
+                /<([A-Za-z][A-Za-z0-9_]*)_reverb>/g,
                 ''
             );
         } else {
@@ -39,7 +44,17 @@ export const App = () => {
                     `<${track}_volume>`,
                     processText(track, 'volume')
                 );
+                proc_text_replaced = proc_text_replaced.replace(
+                    `<${track}_reverb>`,
+                    processText(track, 'reverb')
+                );
             });
+
+            // Global reverb processing
+            proc_text_replaced = proc_text_replaced.replace(
+                `<global_reverb>`,
+                processText('global', 'reverb')
+            );
         }
 
         globalEditor.setCode(proc_text_replaced);
@@ -82,6 +97,18 @@ export const App = () => {
                     [track]: 1,
                 }));
             }
+
+            if (!(track in reverbSettings)) {
+                setReverbSettings((prevSettings) => ({
+                    ...prevSettings,
+                    [track]: {
+                        room: 0,
+                        roomSize: 0,
+                        roomFade: 0,
+                        roomLowPass: 0,
+                    },
+                }));
+            }
         });
     };
 
@@ -98,6 +125,36 @@ export const App = () => {
             replace = '_';
         } else if (volumeMap[track] && action === 'volume') {
             replace = `.postgain(${volumeMap[track]})`;
+        } else if (track === 'global' && action === 'reverb') {
+            const settings = reverbSettings['global'];
+            replace = 'all(x => x';
+            if (settings.room) {
+                replace += `.room(${settings.room})`;
+            }
+            if (settings.lpf) {
+                replace += `.rlp(${settings.roomLowPass})`;
+            }
+            if (settings.roomSize) {
+                replace += `.rsize(${settings.roomSize})`;
+            }
+            if (settings.roomFade) {
+                replace += `.rfade(${settings.roomFade})`;
+            }
+            replace = replace === 'all(x => x' ? '' : replace + ')';
+        } else if (reverbSettings[track] && action === 'reverb') {
+            const settings = reverbSettings[track];
+            if (settings.room) {
+                replace += `.room(${settings.room})`;
+            }
+            if (settings.lpf) {
+                replace += `.rlp(${settings.roomLowPass})`;
+            }
+            if (settings.roomSize) {
+                replace += `.rsize(${settings.roomSize})`;
+            }
+            if (settings.roomFade) {
+                replace += `.rfade(${settings.roomFade})`;
+            }
         }
         return replace;
     };
@@ -105,31 +162,27 @@ export const App = () => {
     return (
         <>
             <Header globalEditor={globalEditor} handleProcessing={handleProcessing} />
-
-            <div>
-                <main>
-                    <div className="container-fluid">
-                        <div className="row">
-                            <StrudelEditor />
-                            <Settings
-                                setGlobalEditor={setGlobalEditor}
-                                handleProcessing={handleProcessing}
-                                handleProcPlay={handleProcPlay}
-                                tracks={tracks}
-                                tracksInitialised={tracksInitialised}
-                                setTracksInitialised={setTracksInitialised}
-                                extractTracks={extractTracks}
-                                muteMap={muteMap}
-                                setMuteMap={setMuteMap}
-                                soloTrack={soloTrack}
-                                setSoloTrack={setSoloTrack}
-                                volumeMap={volumeMap}
-                                setVolumeMap={setVolumeMap}
-                            />
-                        </div>
-                    </div>
-                    <canvas id="roll"></canvas>
-                </main>
+            <div className="container-fluid">
+                <div className="row">
+                    <StrudelEditor />
+                    <Settings
+                        setGlobalEditor={setGlobalEditor}
+                        handleProcessing={handleProcessing}
+                        handleProcPlay={handleProcPlay}
+                        tracks={tracks}
+                        tracksInitialised={tracksInitialised}
+                        setTracksInitialised={setTracksInitialised}
+                        extractTracks={extractTracks}
+                        muteMap={muteMap}
+                        setMuteMap={setMuteMap}
+                        soloTrack={soloTrack}
+                        setSoloTrack={setSoloTrack}
+                        volumeMap={volumeMap}
+                        setVolumeMap={setVolumeMap}
+                        reverbSettings={reverbSettings}
+                        setReverbSettings={setReverbSettings}
+                    />
+                </div>
             </div>
         </>
     );

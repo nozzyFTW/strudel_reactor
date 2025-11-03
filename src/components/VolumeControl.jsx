@@ -1,8 +1,5 @@
-import { useState } from 'react';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
-import { Dial } from './Dial';
-import { h } from '@strudel/draw';
 
 export const VolumeControl = ({
     trackNumber,
