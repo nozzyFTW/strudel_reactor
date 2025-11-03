@@ -32,12 +32,7 @@ export const Settings = ({
     };
 
     return (
-        <Accordion
-            flush
-            className={`col-md-6 ${styles.accordionDark}`}
-            defaultActiveKey={['0']}
-            alwaysOpen
-        >
+        <Accordion flush className={styles.accordionDark} defaultActiveKey={['0']} alwaysOpen>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Text to Preprocess</Accordion.Header>
                 <Accordion.Body>

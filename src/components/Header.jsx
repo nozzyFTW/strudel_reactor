@@ -11,9 +11,8 @@ export const Header = ({ globalEditor, handleProcessing }) => {
                 Strudel Reactor
             </h1>
             <div className="col-md-3">
-                <nav className="d-flex justify-content-around">
+                <nav className="d-flex justify-content-end me-3" style={{ gap: '10px' }}>
                     <ProcButtons globalEditor={globalEditor} handleProcessing={handleProcessing} />
-                    <br />
                     <PlayButtons globalEditor={globalEditor} />
                 </nav>
             </div>

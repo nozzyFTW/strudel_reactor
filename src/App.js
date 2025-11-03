@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { StrudelEditor } from './components/StrudelEditor';
 import { Settings } from './components/settings/Settings';
-import { rev } from '@strudel/core';
+import { Graph } from './components/Graph';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
@@ -162,9 +162,13 @@ export const App = () => {
     return (
         <>
             <Header globalEditor={globalEditor} handleProcessing={handleProcessing} />
-            <div className="container-fluid">
-                <div className="row">
+            <div className="container-fluid d-flex" style={{ gap: '10px' }}>
+                <div style={{ width: '100%' }}>
+                    <Graph />
                     <StrudelEditor />
+                </div>
+
+                <div style={{ width: '100%' }}>
                     <Settings
                         setGlobalEditor={setGlobalEditor}
                         handleProcessing={handleProcessing}
