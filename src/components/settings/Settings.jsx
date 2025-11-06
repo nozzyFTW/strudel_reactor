@@ -1,11 +1,11 @@
 import { Accordion } from 'react-bootstrap';
 import styles from './Settings.module.scss';
 
-import { VolumeControl } from '../VolumeControl';
-import { ProcEditor } from '../ProcEditor';
-import { JsonButtons } from '../JsonButtons';
-import { SetCPS } from '../SetCPS';
-import { ReverbControls } from '../ReverbControls';
+import { VolumeControl } from '../controls/VolumeControl';
+import { ProcEditor } from '../editors/ProcEditor';
+import { JsonButtons } from '../buttonGroups/JsonButtons';
+import { SetCPS } from '../controls/SetCPS';
+import { ReverbControls } from '../controls/ReverbControls';
 
 export const Settings = ({
     setGlobalEditor,
@@ -15,18 +15,14 @@ export const Settings = ({
     tracksInitialised,
     setTracksInitialised,
     extractTracks,
-    muteMap,
-    setMuteMap,
     soloTrack,
     setSoloTrack,
-    volumeMap,
-    setVolumeMap,
-    reverbSettings,
-    setReverbSettings,
+    trackEffectMap,
+    setTrackEffectMap,
+    setChangesActive,
 }) => {
     const initTracks = () => {
         if (tracksInitialised) return;
-
         extractTracks();
         setTracksInitialised(true);
     };
@@ -45,9 +41,7 @@ export const Settings = ({
                             style={{ height: '36px' }}
                         >
                             <JsonButtons
-                                volumeMap={volumeMap}
-                                muteMap={muteMap}
-                                reverbSettings={reverbSettings}
+                                trackEffectMap={trackEffectMap}
                                 handleProcessing={handleProcessing}
                             />
                         </div>
@@ -55,6 +49,7 @@ export const Settings = ({
                     <ProcEditor
                         setGlobalEditor={setGlobalEditor}
                         handleProcessing={handleProcessing}
+                        setChangesActive={setChangesActive}
                     />
                 </Accordion.Body>
             </Accordion.Item>
@@ -67,12 +62,11 @@ export const Settings = ({
                             trackNumber={i + 1}
                             trackName={track}
                             handleProcPlay={handleProcPlay}
-                            muteMap={muteMap}
-                            setMuteMap={setMuteMap}
                             soloTrack={soloTrack}
                             setSoloTrack={setSoloTrack}
-                            volumeMap={volumeMap}
-                            setVolumeMap={setVolumeMap}
+                            trackEffectMap={trackEffectMap}
+                            setTrackEffectMap={setTrackEffectMap}
+                            setChangesActive={setChangesActive}
                         />
                     ))}
                 </Accordion.Body>
@@ -86,7 +80,8 @@ export const Settings = ({
                             <Accordion.Body>
                                 <ReverbControls
                                     trackName="global"
-                                    setReverbSettings={setReverbSettings}
+                                    setTrackEffectMap={setTrackEffectMap}
+                                    setChangesActive={setChangesActive}
                                 />
                             </Accordion.Body>
                         </Accordion.Item>
@@ -96,7 +91,8 @@ export const Settings = ({
                                 <Accordion.Body>
                                     <ReverbControls
                                         trackName={track}
-                                        setReverbSettings={setReverbSettings}
+                                        setTrackEffectMap={setTrackEffectMap}
+                                        setChangesActive={setChangesActive}
                                     />
                                 </Accordion.Body>
                             </Accordion.Item>

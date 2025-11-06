@@ -1,46 +1,52 @@
 import { Button } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-export const JsonButtons = ({ volumeMap, muteMap, reverbSettings, handleProcessing }) => {
-    const handleSave = () => {
-        // Eventual JSON Structure:
-        //
-        // {
-        //     ProcText: ...,
-        //     CPS: ...,
-        //     Volumes: {
-        //         track1: ...,
-        //         track2: ...,
-        //         ...
-        //     },
-        //     MuteStatus: {
-        //         track1: ...,
-        //         track2: ...,
-        //         ...
-        //     },
-        //     ReverbSettings: {
-        //         track1: {
-        //             room: ...,
-        //             roomSize: ...,
-        //             roomFade: ...,
-        //             roomLowPass: ...,
-        //         },
-        //         track2: {
-        //             room: ...,
-        //             roomSize: ...,
-        //             roomFade: ...,
-        //             roomLowPass: ...,
-        //         },
-        //         ...
-        //     }
-        // }
+// JSON Structure Design:
+// {
+//     ProcText: ...,
+//     CPS: ...,
+//     Volumes: {
+//         track1: ...,
+//         track2: ...,
+//         ...
+//     },
+//     MuteStatus: {
+//         track1: ...,
+//         track2: ...,
+//         ...
+//     },
+//     ReverbSettings: {
+//         track1: {
+//             room: ...,
+//             roomSize: ...,
+//             roomFade: ...,
+//             roomLowPass: ...,
+//         },
+//         track2: {
+//             room: ...,
+//             roomSize: ...,
+//             roomFade: ...,
+//             roomLowPass: ...,
+//         },
+//         ...
+//     }
+// }
 
+export const JsonButtons = ({ trackEffectMap, handleProcessing }) => {
+    const handleSave = () => {
         let json = {};
         const val = document.getElementById('proc').value;
         json['ProcText'] = val;
-        json['Volumes'] = volumeMap;
-        json['MuteStatus'] = muteMap;
-        json['ReverbSettings'] = reverbSettings;
+
+        json['Volumes'] = {};
+        json['MuteStatus'] = {};
+        json['ReverbSettings'] = {};
+
+        for (const track in trackEffectMap) {
+            json['Volumes'][track] = trackEffectMap[track].volume;
+            json['MuteStatus'][track] = trackEffectMap[track].mute;
+            json['ReverbSettings'][track] = trackEffectMap[track].reverb;
+        }
 
         json = JSON.stringify(json);
         const blob = new Blob([json], { type: 'application/json' });
@@ -74,12 +80,17 @@ export const JsonButtons = ({ volumeMap, muteMap, reverbSettings, handleProcessi
                 }
                 if (json.Volumes) {
                     for (const [track, volume] of Object.entries(json.Volumes)) {
-                        volumeMap[track] = volume;
+                        trackEffectMap[track].volume = volume;
                     }
                 }
                 if (json.MuteStatus) {
                     for (const [track, muteStatus] of Object.entries(json.MuteStatus)) {
-                        muteMap[track] = muteStatus;
+                        trackEffectMap[track].mute = muteStatus;
+                    }
+                }
+                if (json.ReverbSettings) {
+                    for (const [track, reverbSettings] of Object.entries(json.ReverbSettings)) {
+                        trackEffectMap[track].reverb = reverbSettings;
                     }
                 }
                 handleProcessing();

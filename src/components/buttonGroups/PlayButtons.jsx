@@ -1,4 +1,4 @@
-import { ButtonGroup, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 export const PlayButtons = ({ globalEditor }) => {
     return (
