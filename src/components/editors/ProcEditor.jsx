@@ -9,9 +9,14 @@ import { registerSoundfonts } from '@strudel/soundfonts';
 import { stranger_tune } from '../../tunes';
 import console_monkey_patch from '../../console-monkey-patch';
 
-export const ProcEditor = ({ setGlobalEditor, handleProcessing }) => {
+export const ProcEditor = ({ setGlobalEditor, d3Data, setD3Data, handleProcessing }) => {
     const handleD3Data = (event) => {
-        console.log(event.detail);
+        let tempArray = [...d3Data, event.detail];
+        if (tempArray.length > 20) {
+            tempArray.shift();
+        }
+        setD3Data(tempArray);
+        console.log(d3Data);
     };
 
     const hasRun = useRef(false);

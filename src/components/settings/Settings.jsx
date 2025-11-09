@@ -9,6 +9,8 @@ import { ReverbControls } from '../controls/ReverbControls';
 
 export const Settings = ({
     setGlobalEditor,
+    d3Data,
+    setD3Data,
     handleProcessing,
     handleProcPlay,
     tracks,
@@ -48,8 +50,9 @@ export const Settings = ({
                     </div>
                     <ProcEditor
                         setGlobalEditor={setGlobalEditor}
+                        d3Data={d3Data}
+                        setD3Data={setD3Data}
                         handleProcessing={handleProcessing}
-                        setChangesActive={setChangesActive}
                     />
                 </Accordion.Body>
             </Accordion.Item>

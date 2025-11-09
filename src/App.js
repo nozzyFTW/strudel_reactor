@@ -6,9 +6,12 @@ import { Header } from './components/Header';
 import { StrudelEditor } from './components/editors/StrudelEditor';
 import { Settings } from './components/settings/Settings';
 import { Graph } from './components/Graph';
+import { GraphTest } from './components/Graph';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
+    const [d3Data, setD3Data] = useState([]);
+
     const [tracks, setTracks] = useState([]);
     const [tracksInitialised, setTracksInitialised] = useState(false);
     const [changesActive, setChangesActive] = useState(false);
@@ -169,13 +172,15 @@ export const App = () => {
             />
             <div className="container-fluid d-flex" style={{ gap: '10px' }}>
                 <div style={{ width: '100%' }}>
-                    <Graph />
+                    <Graph graphData={d3Data} />
                     <StrudelEditor />
                 </div>
 
                 <div style={{ width: '100%' }}>
                     <Settings
                         setGlobalEditor={setGlobalEditor}
+                        d3Data={d3Data}
+                        setD3Data={setD3Data}
                         handleProcessing={handleProcessing}
                         handleProcPlay={handleProcPlay}
                         tracks={tracks}
