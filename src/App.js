@@ -3,22 +3,25 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useEffect, useState } from 'react';
 
 import { Header } from './components/Header';
-import { StrudelEditor } from './components/StrudelEditor';
+import { StrudelEditor } from './components/editors/StrudelEditor';
 import { Settings } from './components/settings/Settings';
-import { rev } from '@strudel/core';
+import { Graph } from './components/Graph';
+import { GraphTest } from './components/Graph';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
+    const [d3Data, setD3Data] = useState([]);
+
     const [tracks, setTracks] = useState([]);
     const [tracksInitialised, setTracksInitialised] = useState(false);
+    const [changesActive, setChangesActive] = useState(false);
 
-    // Map track names to mute states
-    const [muteMap, setMuteMap] = useState({});
+    // Map track names to state
+    const [trackEffectMap, setTrackEffectMap] = useState({});
     const [soloTrack, setSoloTrack] = useState('');
-    const [volumeMap, setVolumeMap] = useState({});
-    const [reverbSettings, setReverbSettings] = useState({});
 
     const handleProcessing = () => {
+        setChangesActive(false);
         let proc_text = document.getElementById('proc').value;
         let proc_text_replaced = proc_text;
         if (tracks.length === 0) {
@@ -83,32 +86,30 @@ export const App = () => {
 
         setTracks((prevTracks) => [...prevTracks, ...foundTracks]);
 
-        tracks.forEach((track) => {
-            if (!(track in muteMap)) {
-                setMuteMap((prevMuteMap) => ({
-                    ...prevMuteMap,
-                    [track]: false,
-                }));
+        const defaultEffectSettings = {
+            mute: false,
+            volume: 1,
+            reverb: {
+                room: 0,
+                roomSize: 0,
+                roomFade: 0,
+                roomLowPass: 0,
+            },
+        };
+
+        setTrackEffectMap((prevMap) => {
+            const newMap = { ...prevMap };
+
+            if (!('global' in newMap)) {
+                newMap['global'] = defaultEffectSettings;
             }
 
-            if (!(track in volumeMap)) {
-                setVolumeMap((prevVolumeMap) => ({
-                    ...prevVolumeMap,
-                    [track]: 1,
-                }));
-            }
-
-            if (!(track in reverbSettings)) {
-                setReverbSettings((prevSettings) => ({
-                    ...prevSettings,
-                    [track]: {
-                        room: 0,
-                        roomSize: 0,
-                        roomFade: 0,
-                        roomLowPass: 0,
-                    },
-                }));
-            }
+            foundTracks.forEach((track) => {
+                if (!(track in newMap)) {
+                    newMap[track] = defaultEffectSettings;
+                }
+            });
+            return newMap;
         });
     };
 
@@ -121,12 +122,15 @@ export const App = () => {
 
     const processText = (track, action) => {
         let replace = '';
-        if (muteMap[track] && action === 'mute') {
+
+        if (!trackEffectMap[track]) return '';
+
+        if (trackEffectMap[track].mute && action === 'mute') {
             replace = '_';
-        } else if (volumeMap[track] && action === 'volume') {
-            replace = `.postgain(${volumeMap[track]})`;
+        } else if (trackEffectMap[track].volume && action === 'volume') {
+            replace = `.postgain(${trackEffectMap[track].volume})`;
         } else if (track === 'global' && action === 'reverb') {
-            const settings = reverbSettings['global'];
+            const settings = trackEffectMap['global'].reverb;
             replace = 'all(x => x';
             if (settings.room) {
                 replace += `.room(${settings.room})`;
@@ -141,8 +145,8 @@ export const App = () => {
                 replace += `.rfade(${settings.roomFade})`;
             }
             replace = replace === 'all(x => x' ? '' : replace + ')';
-        } else if (reverbSettings[track] && action === 'reverb') {
-            const settings = reverbSettings[track];
+        } else if (trackEffectMap[track].reverb && action === 'reverb') {
+            const settings = trackEffectMap[track].reverb;
             if (settings.room) {
                 replace += `.room(${settings.room})`;
             }
@@ -161,26 +165,33 @@ export const App = () => {
 
     return (
         <>
-            <Header globalEditor={globalEditor} handleProcessing={handleProcessing} />
-            <div className="container-fluid">
-                <div className="row">
+            <Header
+                globalEditor={globalEditor}
+                handleProcessing={handleProcessing}
+                changesActive={changesActive}
+            />
+            <div className="container-fluid d-flex" style={{ gap: '10px' }}>
+                <div style={{ width: '100%' }}>
+                    <Graph graphData={d3Data} />
                     <StrudelEditor />
+                </div>
+
+                <div style={{ width: '100%' }}>
                     <Settings
                         setGlobalEditor={setGlobalEditor}
+                        d3Data={d3Data}
+                        setD3Data={setD3Data}
                         handleProcessing={handleProcessing}
                         handleProcPlay={handleProcPlay}
                         tracks={tracks}
                         tracksInitialised={tracksInitialised}
                         setTracksInitialised={setTracksInitialised}
                         extractTracks={extractTracks}
-                        muteMap={muteMap}
-                        setMuteMap={setMuteMap}
                         soloTrack={soloTrack}
                         setSoloTrack={setSoloTrack}
-                        volumeMap={volumeMap}
-                        setVolumeMap={setVolumeMap}
-                        reverbSettings={reverbSettings}
-                        setReverbSettings={setReverbSettings}
+                        trackEffectMap={trackEffectMap}
+                        setTrackEffectMap={setTrackEffectMap}
+                        setChangesActive={setChangesActive}
                     />
                 </div>
             </div>

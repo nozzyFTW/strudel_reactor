@@ -5,49 +5,64 @@ export const VolumeControl = ({
     trackNumber,
     trackName,
     handleProcPlay,
-    muteMap,
-    setMuteMap,
     soloTrack,
     setSoloTrack,
-    volumeMap,
-    setVolumeMap,
+    trackEffectMap,
+    setTrackEffectMap,
+    setChangesActive,
 }) => {
     const handleSoloUpdate = (status) => {
         if (status) {
-            for (const track in muteMap) {
+            for (const track in trackEffectMap) {
                 if (track !== trackName) {
-                    setMuteMap((prevMuteMap) => ({
-                        ...prevMuteMap,
-                        [track]: true,
+                    setTrackEffectMap((prevMap) => ({
+                        ...prevMap,
+                        [track]: {
+                            ...prevMap[track],
+                            mute: true,
+                        },
                     }));
                 }
             }
             setSoloTrack(trackName);
+            setChangesActive(true);
         } else {
-            for (const track in muteMap) {
-                setMuteMap((prevMuteMap) => ({
-                    ...prevMuteMap,
-                    [track]: false,
+            for (const track in trackEffectMap) {
+                setTrackEffectMap((prevMap) => ({
+                    ...prevMap,
+                    [track]: {
+                        ...prevMap[track],
+                        mute: false,
+                    },
                 }));
             }
             setSoloTrack('');
+            setChangesActive(true);
         }
         handleProcPlay();
     };
 
     const handleMuteUpdate = () => {
-        setMuteMap((prevMuteMap) => ({
-            ...prevMuteMap,
-            [trackName]: !prevMuteMap[trackName],
+        setTrackEffectMap((prevMap) => ({
+            ...prevMap,
+            [trackName]: {
+                ...prevMap[trackName],
+                mute: !prevMap[trackName].mute,
+            },
         }));
+        setChangesActive(true);
         handleProcPlay();
     };
 
     const handleVolumeChange = (newVolume) => {
-        setVolumeMap((prevVolumeMap) => ({
-            ...prevVolumeMap,
-            [trackName]: newVolume,
+        setTrackEffectMap((prevMap) => ({
+            ...prevMap,
+            [trackName]: {
+                ...prevMap[trackName],
+                volume: newVolume,
+            },
         }));
+        setChangesActive(true);
         handleProcPlay();
     };
 
@@ -60,9 +75,9 @@ export const VolumeControl = ({
                     min="0"
                     max="1"
                     step="0.1"
-                    value={volumeMap?.[trackName] || 1}
+                    value={trackEffectMap?.[trackName]?.volume || 1}
                     style={{ width: '70%' }}
-                    disabled={muteMap[trackName]}
+                    disabled={trackEffectMap[trackName]?.mute}
                     onChange={(e) => handleVolumeChange(e.target.value)}
                 />
                 <ButtonGroup aria-label="Gain Buttons" style={{ width: '20%' }}>
@@ -77,7 +92,7 @@ export const VolumeControl = ({
                     </ToggleButton>
                     <ToggleButton
                         id={`${trackName}_mute`}
-                        variant={muteMap[trackName] ? 'danger' : 'outline-danger'}
+                        variant={trackEffectMap[trackName]?.mute ? 'danger' : 'outline-danger'}
                         size="sm"
                         onClick={handleMuteUpdate}
                     >
