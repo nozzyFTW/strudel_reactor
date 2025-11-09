@@ -6,29 +6,27 @@ const extractDataFromLog = (data) => {
         return 0;
     }
 
-    var stringArray = data.split(/(\s+)/);
-    for (const item of stringArray) {
-        if (item.startsWith('gain:')) {
-            let val = item.substring(5);
-            return Number(val);
-        }
+    // If data is an array, use the last element; otherwise use the value directly
+    let str = Array.isArray(data) ? data[data.length - 1] : data;
+
+    const match = str.match(/gain:\s*([0-9]+(?:\.[0-9]+)?)/i);
+    if (match && match[1]) {
+        return parseFloat(match[1]);
     }
     return 0;
 };
 
 export const Graph = ({ graphData }) => {
     const svgRef = useRef();
-    const maxValue = 1;
+    const maxValue = 2;
 
     useEffect(() => {
         const svg = d3.select('svg');
         svg.selectAll('*').remove();
 
-        let w = svg.node().getBoundingClientRect().width;
-        w = w - 40;
-        let h = svg.node().getBoundingClientRect().height;
-        h = h - 25;
-        const barMargin = 10;
+        let w = svg.node().getBoundingClientRect().width - 40;
+        let h = svg.node().getBoundingClientRect().height - 25;
+
         const barWidth = w / graphData.length;
 
         let yScale = d3.scaleLinear().domain([0, maxValue]).range([h, 0]);
@@ -53,6 +51,7 @@ export const Graph = ({ graphData }) => {
             .selectAll('stop')
             .data([
                 { offset: '0%', color: 'green' },
+                { offset: '50%', color: 'yellow' },
                 { offset: '100%', color: 'red' },
             ])
             .enter()

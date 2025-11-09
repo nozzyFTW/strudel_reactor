@@ -11,7 +11,7 @@ import console_monkey_patch from '../../console-monkey-patch';
 
 export const ProcEditor = ({ setGlobalEditor, d3Data, setD3Data, handleProcessing }) => {
     const handleD3Data = (event) => {
-        let tempArray = [...d3Data, event.detail];
+        let tempArray = [...d3Data, ...event.detail];
         if (tempArray.length > 20) {
             tempArray.shift();
         }
