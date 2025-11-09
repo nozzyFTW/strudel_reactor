@@ -6,6 +6,7 @@ import { ProcEditor } from '../editors/ProcEditor';
 import { JsonButtons } from '../buttonGroups/JsonButtons';
 import { SetCPS } from '../controls/SetCPS';
 import { ReverbControls } from '../controls/ReverbControls';
+import { FilterControls } from '../controls/FilterControls';
 
 export const Settings = ({
     setGlobalEditor,
@@ -101,6 +102,15 @@ export const Settings = ({
                             </Accordion.Item>
                         ))}
                     </Accordion>
+                </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="3">
+                <Accordion.Header>Filters</Accordion.Header>
+                <Accordion.Body>
+                    <FilterControls
+                        setTrackEffectMap={setTrackEffectMap}
+                        setChangesActive={setChangesActive}
+                    />
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>

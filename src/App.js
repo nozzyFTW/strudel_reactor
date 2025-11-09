@@ -6,7 +6,6 @@ import { Header } from './components/Header';
 import { StrudelEditor } from './components/editors/StrudelEditor';
 import { Settings } from './components/settings/Settings';
 import { Graph } from './components/Graph';
-import { GraphTest } from './components/Graph';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
@@ -55,10 +54,25 @@ export const App = () => {
 
             // Global reverb processing
             proc_text_replaced = proc_text_replaced.replace(
-                `<global_reverb>`,
+                '<global_reverb>',
                 processText('global', 'reverb')
             );
         }
+
+        console.log(trackEffectMap['global']);
+        // Global filter processing
+        proc_text_replaced = proc_text_replaced.replace(
+            '<global_low_pass>',
+            processText('global', 'lpf')
+        );
+        proc_text_replaced = proc_text_replaced.replace(
+            '<global_band_pass>',
+            processText('global', 'bpf')
+        );
+        proc_text_replaced = proc_text_replaced.replace(
+            '<global_high_pass>',
+            processText('global', 'hpf')
+        );
 
         globalEditor.setCode(proc_text_replaced);
         extractTracks();
@@ -102,6 +116,14 @@ export const App = () => {
 
             if (!('global' in newMap)) {
                 newMap['global'] = defaultEffectSettings;
+                newMap['global'] = {
+                    ...newMap['global'],
+                    filter: {
+                        low: 0,
+                        band: 0,
+                        high: 0,
+                    },
+                };
             }
 
             foundTracks.forEach((track) => {
@@ -159,6 +181,12 @@ export const App = () => {
             if (settings.roomFade) {
                 replace += `.rfade(${settings.roomFade})`;
             }
+        } else if (action === 'lpf') {
+            replace = `all(x => x.lpf(${trackEffectMap['global'].filter.low}))`;
+        } else if (action === 'bpf') {
+            replace = `all(x => x.bpf(${trackEffectMap['global'].filter.band}))`;
+        } else if (action === 'hpf') {
+            replace = `all(x => x.hpf(${trackEffectMap['global'].filter.high}))`;
         }
         return replace;
     };
