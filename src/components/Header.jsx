@@ -1,16 +1,19 @@
 import { ProcButtons } from './buttonGroups/ProcButtons';
 import { PlayButtons } from './buttonGroups/PlayButtons';
+import { Col, Row } from 'react-bootstrap';
 
 export const Header = ({ globalEditor, handleProcessing, changesActive }) => {
     return (
-        <div
-            className="row d-flex justify-content-between align-items-center mb-3 text-white p-2"
+        <Row
+            className="d-flex justify-content-between align-items-center mb-3 text-white p-2"
             style={{ backgroundColor: '#222' }}
         >
-            <h1 className="col-md-5 ms-1 mb-0" style={{ fontSize: '24px' }}>
-                Strudel Reactor
-            </h1>
-            <div className="col-md-6">
+            <Col md={5}>
+                <h1 className="ms-1 mb-0" style={{ fontSize: '24px' }}>
+                    Strudel Reactor
+                </h1>
+            </Col>
+            <Col md={6}>
                 <nav
                     className="d-flex justify-content-end me-3 align-items-center "
                     style={{ gap: '10px' }}
@@ -23,7 +26,7 @@ export const Header = ({ globalEditor, handleProcessing, changesActive }) => {
                     <ProcButtons globalEditor={globalEditor} handleProcessing={handleProcessing} />
                     <PlayButtons globalEditor={globalEditor} />
                 </nav>
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 };

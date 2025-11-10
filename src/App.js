@@ -185,12 +185,12 @@ export const App = () => {
                 changesActive={changesActive}
             />
             <div className="container-fluid d-flex" style={{ gap: '10px' }}>
-                <div style={{ width: '100%' }}>
+                <div className="w-100">
                     <Graph graphData={d3Data} />
                     <StrudelEditor />
                 </div>
 
-                <div style={{ width: '100%' }}>
+                <div className="w-100">
                     <Settings
                         setGlobalEditor={setGlobalEditor}
                         d3Data={d3Data}
