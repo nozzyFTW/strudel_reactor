@@ -1,4 +1,4 @@
-import { Accordion } from 'react-bootstrap';
+import { Accordion, Col, Row } from 'react-bootstrap';
 import styles from './Settings.module.scss';
 
 import { VolumeControl } from '../controls/VolumeControl';
@@ -35,20 +35,25 @@ export const Settings = ({
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Text to Preprocess</Accordion.Header>
                 <Accordion.Body>
-                    <div className="row mb-2">
-                        <div className="col-md-5">
-                            <SetCPS />
-                        </div>
-                        <div
-                            className="col-md-7 d-flex justify-content-end"
+                    <Row className="mb-2">
+                        <Col md={5}>
+                            <SetCPS
+                                trackEffectsMap={trackEffectMap}
+                                setTrackEffectsMap={setTrackEffectMap}
+                                setChangesActive={setChangesActive}
+                            />
+                        </Col>
+                        <Col
+                            md={7}
+                            className="d-flex justify-content-end"
                             style={{ height: '36px' }}
                         >
                             <JsonButtons
                                 trackEffectMap={trackEffectMap}
                                 handleProcessing={handleProcessing}
                             />
-                        </div>
-                    </div>
+                        </Col>
+                    </Row>
                     <ProcEditor
                         setGlobalEditor={setGlobalEditor}
                         d3Data={d3Data}

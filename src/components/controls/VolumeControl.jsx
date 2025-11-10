@@ -96,7 +96,7 @@ export const VolumeControl = ({
                         size="sm"
                         onClick={handleMuteUpdate}
                     >
-                        Mute
+                        {trackEffectMap[trackName]?.mute ? 'Unmute' : 'Mute'}
                     </ToggleButton>
                 </ButtonGroup>
             </div>

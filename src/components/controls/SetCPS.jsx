@@ -1,17 +1,26 @@
-export const SetCPS = () => {
+import { FormControl, InputGroup } from 'react-bootstrap';
+
+export const SetCPS = ({ trackEffectsMap, setTrackEffectsMap, setChangesActive }) => {
+    const handleCPSChange = (newValue) => {
+        setTrackEffectsMap((prevMap) => ({
+            ...prevMap,
+            global: {
+                ...prevMap['global'],
+                cps: newValue,
+            },
+        }));
+        setChangesActive(true);
+    };
+
     return (
-        <div className="input-group mb-3" style={{ width: '50%' }}>
-            <span className="input-group-text" id="basic-addon1">
-                CPS
-            </span>
-            <input
-                type="text"
-                className="form-control"
-                placeholder="..."
-                aria-label="CPS"
-                aria-describedby="basic-addon1"
+        <InputGroup className="mb-3 w-50">
+            <InputGroup.Text>CPS</InputGroup.Text>
+            <FormControl
                 style={{ minWidth: '50px' }}
-            ></input>
-        </div>
+                placeholder="..."
+                defaultValue={trackEffectsMap['global']?.cps}
+                onChange={(e) => handleCPSChange(e.target.value)}
+            ></FormControl>
+        </InputGroup>
     );
 };

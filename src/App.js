@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Header } from './components/Header';
 import { StrudelEditor } from './components/editors/StrudelEditor';
@@ -18,6 +18,7 @@ export const App = () => {
     // Map track names to state
     const [trackEffectMap, setTrackEffectMap] = useState({});
     const [soloTrack, setSoloTrack] = useState('');
+    let originalCPS = useRef(null);
 
     const handleProcessing = () => {
         setChangesActive(false);
@@ -55,6 +56,7 @@ export const App = () => {
             // Global reverb processing
             proc_text_replaced = proc_text_replaced.replace(
                 '<global_reverb>',
+                '<global_reverb>',
                 processText('global', 'reverb')
             );
         }
@@ -74,6 +76,12 @@ export const App = () => {
             processText('global', 'hpf')
         );
 
+        // Global CPS processing
+        const setCpsValue = `setcps(${originalCPS.current})`;
+        console.log(originalCPS);
+        proc_text_replaced = proc_text_replaced.replace(setCpsValue, `// ${setCpsValue}`);
+        proc_text_replaced = proc_text_replaced.replace('<cps>', processText('global', 'cps'));
+
         globalEditor.setCode(proc_text_replaced);
         extractTracks();
     };
@@ -89,12 +97,18 @@ export const App = () => {
         if (!globalEditor?.code) return;
 
         const trackNameRegex = /([A-Za-z][A-Za-z0-9_]*)\s*:\s*$/;
+        const cpsRegex = /setcps\([0-9\/]*\)/;
         const foundTracks = [];
 
         globalEditor.code.split('\n').forEach((line) => {
-            const match = line.match(trackNameRegex);
+            let match = line.match(trackNameRegex);
             if (match && !tracks.includes(match[1]) && !foundTracks.includes(match[1])) {
                 foundTracks.push(match[1]);
+            }
+
+            match = line.match(cpsRegex);
+            if (match) {
+                originalCPS.current = match[0].replace('setcps(', '').replace(')', '');
             }
         });
 
@@ -118,11 +132,7 @@ export const App = () => {
                 newMap['global'] = defaultEffectSettings;
                 newMap['global'] = {
                     ...newMap['global'],
-                    filter: {
-                        low: 0,
-                        band: 0,
-                        high: 0,
-                    },
+                    cps: originalCPS.current,
                 };
             }
 
@@ -181,12 +191,14 @@ export const App = () => {
             if (settings.roomFade) {
                 replace += `.rfade(${settings.roomFade})`;
             }
-        } else if (action === 'lpf') {
+        } else if (trackEffectMap['global'].filter?.low && action === 'lpf') {
             replace = `all(x => x.lpf(${trackEffectMap['global'].filter.low}))`;
-        } else if (action === 'bpf') {
+        } else if (trackEffectMap['global'].filter?.band && action === 'bpf') {
             replace = `all(x => x.bpf(${trackEffectMap['global'].filter.band}))`;
-        } else if (action === 'hpf') {
+        } else if (trackEffectMap['global'].filter?.high && action === 'hpf') {
             replace = `all(x => x.hpf(${trackEffectMap['global'].filter.high}))`;
+        } else if (track === 'global' && action === 'cps') {
+            replace = `setcps(${trackEffectMap['global'].cps})`;
         }
         return replace;
     };
@@ -199,12 +211,12 @@ export const App = () => {
                 changesActive={changesActive}
             />
             <div className="container-fluid d-flex" style={{ gap: '10px' }}>
-                <div style={{ width: '100%' }}>
+                <div className="w-100">
                     <Graph graphData={d3Data} />
                     <StrudelEditor />
                 </div>
 
-                <div style={{ width: '100%' }}>
+                <div className="w-100">
                     <Settings
                         setGlobalEditor={setGlobalEditor}
                         d3Data={d3Data}
