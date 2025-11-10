@@ -36,7 +36,11 @@ export const Settings = ({
                 <Accordion.Body>
                     <div className="row mb-2">
                         <div className="col-md-5">
-                            <SetCPS />
+                            <SetCPS
+                                trackEffectsMap={trackEffectMap}
+                                setTrackEffectsMap={setTrackEffectMap}
+                                setChangesActive={setChangesActive}
+                            />
                         </div>
                         <div
                             className="col-md-7 d-flex justify-content-end"
