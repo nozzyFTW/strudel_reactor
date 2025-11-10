@@ -96,8 +96,12 @@ stack(
 )<drums2_reverb><drums2_volume>
 
 <global_reverb>
+<global_low_pass>
+<global_band_pass>
+<global_high_pass>
+all(x => x.log())
+
 //Remixed and reproduced from Algorave Dave's code found here: https://www.youtube.com/watch?v=ZCcpWzhekEY
 // all(x => x.gain(mouseX.range(0,1)))
-// all(x => x.log())
 
 // @version 1.2`;

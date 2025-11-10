@@ -56,9 +56,26 @@ export const App = () => {
             // Global reverb processing
             proc_text_replaced = proc_text_replaced.replace(
                 '<global_reverb>',
+                '<global_reverb>',
                 processText('global', 'reverb')
             );
         }
+
+        console.log(trackEffectMap['global']);
+        // Global filter processing
+        proc_text_replaced = proc_text_replaced.replace(
+            '<global_low_pass>',
+            processText('global', 'lpf')
+        );
+        proc_text_replaced = proc_text_replaced.replace(
+            '<global_band_pass>',
+            processText('global', 'bpf')
+        );
+        proc_text_replaced = proc_text_replaced.replace(
+            '<global_high_pass>',
+            processText('global', 'hpf')
+        );
+
         // Global CPS processing
         const setCpsValue = `setcps(${originalCPS.current})`;
         console.log(originalCPS);
@@ -98,7 +115,6 @@ export const App = () => {
         setTracks((prevTracks) => [...prevTracks, ...foundTracks]);
 
         const defaultEffectSettings = {
-            cps: originalCPS.current,
             mute: false,
             volume: 1,
             reverb: {
@@ -114,6 +130,10 @@ export const App = () => {
 
             if (!('global' in newMap)) {
                 newMap['global'] = defaultEffectSettings;
+                newMap['global'] = {
+                    ...newMap['global'],
+                    cps: originalCPS.current,
+                };
             }
 
             foundTracks.forEach((track) => {
@@ -171,6 +191,12 @@ export const App = () => {
             if (settings.roomFade) {
                 replace += `.rfade(${settings.roomFade})`;
             }
+        } else if (trackEffectMap['global'].filter?.low && action === 'lpf') {
+            replace = `all(x => x.lpf(${trackEffectMap['global'].filter.low}))`;
+        } else if (trackEffectMap['global'].filter?.band && action === 'bpf') {
+            replace = `all(x => x.bpf(${trackEffectMap['global'].filter.band}))`;
+        } else if (trackEffectMap['global'].filter?.high && action === 'hpf') {
+            replace = `all(x => x.hpf(${trackEffectMap['global'].filter.high}))`;
         } else if (track === 'global' && action === 'cps') {
             replace = `setcps(${trackEffectMap['global'].cps})`;
         }

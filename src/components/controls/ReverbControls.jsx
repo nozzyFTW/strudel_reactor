@@ -57,10 +57,10 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
     };
 
     const reverbControlList = [
-        { name: 'Room', min: 0, max: 1, handlerFn: handleRoomChange },
-        { name: 'Room Size', min: 0, max: 10, handlerFn: handleRoomSizeChange },
-        { name: 'Room Fade', min: 0, max: 20, handlerFn: handleRoomFadeChange },
-        { name: 'Low Pass', min: 0, max: 20000, handlerFn: handleRoomLowPassChange },
+        { name: 'Room', max: 1, handlerFn: handleRoomChange },
+        { name: 'Room Size', max: 10, handlerFn: handleRoomSizeChange },
+        { name: 'Room Fade', max: 20, handlerFn: handleRoomFadeChange },
+        { name: 'Low Pass', max: 20000, handlerFn: handleRoomLowPassChange },
     ];
 
     return (
@@ -69,7 +69,7 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
                 <Dial
                     key={index}
                     effectType={control.name}
-                    minValue={control.min}
+                    minValue={0}
                     maxValue={control.max}
                     handler={control.handlerFn}
                 />
