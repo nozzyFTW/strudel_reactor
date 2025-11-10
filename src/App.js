@@ -1,12 +1,11 @@
 import './App.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Header } from './components/Header';
 import { StrudelEditor } from './components/editors/StrudelEditor';
 import { Settings } from './components/settings/Settings';
 import { Graph } from './components/Graph';
-import { GraphTest } from './components/Graph';
 
 export const App = () => {
     const [globalEditor, setGlobalEditor] = useState(null);
@@ -19,6 +18,7 @@ export const App = () => {
     // Map track names to state
     const [trackEffectMap, setTrackEffectMap] = useState({});
     const [soloTrack, setSoloTrack] = useState('');
+    let originalCPS = useRef(null);
 
     const handleProcessing = () => {
         setChangesActive(false);
@@ -55,10 +55,15 @@ export const App = () => {
 
             // Global reverb processing
             proc_text_replaced = proc_text_replaced.replace(
-                `<global_reverb>`,
+                '<global_reverb>',
                 processText('global', 'reverb')
             );
         }
+        // Global CPS processing
+        const setCpsValue = `setcps(${originalCPS.current})`;
+        console.log(originalCPS);
+        proc_text_replaced = proc_text_replaced.replace(setCpsValue, `// ${setCpsValue}`);
+        proc_text_replaced = proc_text_replaced.replace('<cps>', processText('global', 'cps'));
 
         globalEditor.setCode(proc_text_replaced);
         extractTracks();
@@ -75,18 +80,25 @@ export const App = () => {
         if (!globalEditor?.code) return;
 
         const trackNameRegex = /([A-Za-z][A-Za-z0-9_]*)\s*:\s*$/;
+        const cpsRegex = /setcps\([0-9\/]*\)/;
         const foundTracks = [];
 
         globalEditor.code.split('\n').forEach((line) => {
-            const match = line.match(trackNameRegex);
+            let match = line.match(trackNameRegex);
             if (match && !tracks.includes(match[1]) && !foundTracks.includes(match[1])) {
                 foundTracks.push(match[1]);
+            }
+
+            match = line.match(cpsRegex);
+            if (match) {
+                originalCPS.current = match[0].replace('setcps(', '').replace(')', '');
             }
         });
 
         setTracks((prevTracks) => [...prevTracks, ...foundTracks]);
 
         const defaultEffectSettings = {
+            cps: originalCPS.current,
             mute: false,
             volume: 1,
             reverb: {
@@ -159,6 +171,8 @@ export const App = () => {
             if (settings.roomFade) {
                 replace += `.rfade(${settings.roomFade})`;
             }
+        } else if (track === 'global' && action === 'cps') {
+            replace = `setcps(${trackEffectMap['global'].cps})`;
         }
         return replace;
     };
