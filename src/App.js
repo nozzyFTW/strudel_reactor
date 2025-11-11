@@ -56,7 +56,6 @@ export const App = () => {
             // Global reverb processing
             proc_text_replaced = proc_text_replaced.replace(
                 '<global_reverb>',
-                '<global_reverb>',
                 processText('global', 'reverb')
             );
         }
@@ -97,7 +96,7 @@ export const App = () => {
         if (!globalEditor?.code) return;
 
         const trackNameRegex = /([A-Za-z][A-Za-z0-9_]*)\s*:\s*$/;
-        const cpsRegex = /setcps\([0-9\/]*\)/;
+        const cpsRegex = /setcps\([0-9/]*\)/;
         const foundTracks = [];
 
         globalEditor.code.split('\n').forEach((line) => {
