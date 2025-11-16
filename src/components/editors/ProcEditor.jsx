@@ -10,13 +10,18 @@ import { stranger_tune } from '../../tunes';
 import console_monkey_patch from '../../console-monkey-patch';
 
 export const ProcEditor = ({ setGlobalEditor, d3Data, setD3Data, handleProcessing }) => {
+    /**
+     * Handle update of D3 Chart data array from live Strudel data
+     * @param {String[]} event live Strudel data
+     */
     const handleD3Data = (event) => {
         let tempArray = [...d3Data, ...event.detail];
+
+        // ensure maximum of 20 bars in graph
         if (tempArray.length > 20) {
             tempArray.shift();
         }
         setD3Data(tempArray);
-        console.log(d3Data);
     };
 
     const hasRun = useRef(false);

@@ -1,6 +1,10 @@
 import { Dial } from './Dial';
 
 export const FilterControls = ({ setTrackEffectMap, setChangesActive }) => {
+    /**
+     * Handle LPF Setting change event
+     * @param {Number} newValue
+     */
     const handleLPFilterChange = (newValue) => {
         setTrackEffectMap((prevMap) => ({
             ...prevMap,
@@ -15,6 +19,10 @@ export const FilterControls = ({ setTrackEffectMap, setChangesActive }) => {
         setChangesActive(true);
     };
 
+    /**
+     * Handle BPF Setting change event
+     * @param {Number} newValue
+     */
     const handleBPFilterChange = (newValue) => {
         setTrackEffectMap((prevMap) => ({
             ...prevMap,
@@ -29,6 +37,10 @@ export const FilterControls = ({ setTrackEffectMap, setChangesActive }) => {
         setChangesActive(true);
     };
 
+    /**
+     * Handle HPF Setting change event
+     * @param {Number} newValue
+     */
     const handleHPFilterChange = (newValue) => {
         setTrackEffectMap((prevMap) => ({
             ...prevMap,
@@ -43,6 +55,7 @@ export const FilterControls = ({ setTrackEffectMap, setChangesActive }) => {
         setChangesActive(true);
     };
 
+    // Array of filter controls
     const filterControlList = [
         { name: 'Low', handlerFn: handleLPFilterChange },
         { name: 'Mid', handlerFn: handleBPFilterChange },

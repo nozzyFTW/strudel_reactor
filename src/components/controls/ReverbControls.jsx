@@ -1,5 +1,9 @@
 import { Dial } from './Dial.jsx';
 export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive }) => {
+    /**
+     * Handle Room Reverb Setting change event
+     * @param {Number} newValue
+     */
     const handleRoomChange = (newValue) => {
         setTrackEffectMap((prevMap) => ({
             ...prevMap,
@@ -14,6 +18,10 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
         setChangesActive(true);
     };
 
+    /**
+     * Handle Room Size Reverb Setting change event
+     * @param {Number} newValue
+     */
     const handleRoomSizeChange = (newValue) => {
         setTrackEffectMap((prevMap) => ({
             ...prevMap,
@@ -28,6 +36,10 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
         setChangesActive(true);
     };
 
+    /**
+     * Handle Room Fade Reverb Setting change event
+     * @param {Number} newValue
+     */
     const handleRoomFadeChange = (newValue) => {
         setTrackEffectMap((prevMap) => ({
             ...prevMap,
@@ -42,6 +54,10 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
         setChangesActive(true);
     };
 
+    /**
+     * Handle Room Low Pass Reverb Setting change event
+     * @param {Number} newValue
+     */
     const handleRoomLowPassChange = (newValue) => {
         setTrackEffectMap((prevMap) => ({
             ...prevMap,
@@ -56,6 +72,7 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
         setChangesActive(true);
     };
 
+    // Array of reverb controls
     const reverbControlList = [
         { name: 'Room', max: 1, handlerFn: handleRoomChange },
         { name: 'Room Size', max: 10, handlerFn: handleRoomSizeChange },

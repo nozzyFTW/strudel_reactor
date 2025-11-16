@@ -1,7 +1,7 @@
 import { Accordion, Col, Row } from 'react-bootstrap';
 import styles from './Settings.module.scss';
 
-import { VolumeControl } from '../controls/VolumeControl';
+import { VolumeControl } from '../controls/volumeControls/VolumeControl';
 import { ProcEditor } from '../editors/ProcEditor';
 import { JsonButtons } from '../buttonGroups/JsonButtons';
 import { SetCPS } from '../controls/SetCPS';
@@ -24,6 +24,9 @@ export const Settings = ({
     setTrackEffectMap,
     setChangesActive,
 }) => {
+    /**
+     * Initialise tracks if they haven't already been initialised.
+     */
     const initTracks = () => {
         if (tracksInitialised) return;
         extractTracks();

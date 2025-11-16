@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 
 const extractDataFromLog = (data) => {
@@ -9,6 +9,7 @@ const extractDataFromLog = (data) => {
     // If data is an array, use the last element; otherwise use the value directly
     let str = Array.isArray(data) ? data[data.length - 1] : data;
 
+    // get gain from Strudel log (i.e. '... gain: 0.72643...')
     const match = str.match(/gain:\s*([0-9]+(?:\.[0-9]+)?)/i);
     if (match && match[1]) {
         return parseFloat(match[1]);
@@ -17,7 +18,6 @@ const extractDataFromLog = (data) => {
 };
 
 export const Graph = ({ graphData }) => {
-    const svgRef = useRef();
     const maxValue = 2;
 
     useEffect(() => {
@@ -35,10 +35,6 @@ export const Graph = ({ graphData }) => {
             .append('g')
             .classed('chartGroup', true)
             .attr('transform', 'translate(30, 3)');
-
-        const colourScale = d3
-            .scaleSequential(d3.interpolateRgb('Lime', 'Red'))
-            .domain([0, maxValue]);
 
         chartGroup
             .append('linearGradient')
@@ -83,12 +79,7 @@ export const Graph = ({ graphData }) => {
             className="mb-3"
             style={{ width: '100%', height: '20vh', backgroundColor: '#222' }}
         >
-            <svg
-                ref={svgRef}
-                width="100%"
-                height="100%"
-                className="border border-primary rounded p-2"
-            />
+            <svg width="100%" height="100%" className="rounded p-2" />
         </div>
     );
 };

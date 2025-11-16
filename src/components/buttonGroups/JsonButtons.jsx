@@ -33,6 +33,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 // }
 
 export const JsonButtons = ({ trackEffectMap, handleProcessing }) => {
+    /**
+     * Handle save button click.
+     * Takes data from trackEffectMap and appends it to a JSON format.
+     */
     const handleSave = () => {
         let json = {};
         const val = document.getElementById('proc').value;
@@ -49,21 +53,31 @@ export const JsonButtons = ({ trackEffectMap, handleProcessing }) => {
         }
 
         json = JSON.stringify(json);
+
+        // generate downloadable JSON file from JSONified data
         const blob = new Blob([json], { type: 'application/json' });
         downloadBlob(blob);
     };
 
+    /**
+     * Handle download of JSON Blob, simulating button click.
+     * @param {Blob} blob file blob to download (containing JSON file)
+     */
     const downloadBlob = (blob) => {
         const a = document.createElement('a');
         const url = URL.createObjectURL(blob);
         a.href = url;
         a.download = 'strudel_reactor_data.json';
         a.click();
+
+        // cleans up memory taken by URL object
         URL.revokeObjectURL(url);
     };
 
     /**
-     * Will load a JSON file in, and set the ProcText area accordingly
+     * Will load a JSON file in, and set the Proc textarea accordingly.
+     * The trackEffectMap will also be populated with each track's associated
+     * effect setting.
      */
     const handleLoad = () => {
         const input = document.createElement('input');

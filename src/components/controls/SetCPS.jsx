@@ -1,6 +1,10 @@
 import { FormControl, InputGroup } from 'react-bootstrap';
 
 export const SetCPS = ({ trackEffectsMap, setTrackEffectsMap, setChangesActive }) => {
+    /**
+     * Handle setCPS change event
+     * @param {String} newValue
+     */
     const handleCPSChange = (newValue) => {
         setTrackEffectsMap((prevMap) => ({
             ...prevMap,
