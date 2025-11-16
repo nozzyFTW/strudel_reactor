@@ -74,6 +74,8 @@ Within the text area, shown in the image below, you can enter valid Strudel code
 
 Within Strudel Reactor, there are five categories of tags that can be used - CPS, Volume, Mute, Reverb, and Filter.
 
+<div align='center'>
+
 |          Tag          | Category |                                   Description                                   |
 | :-------------------: | :------: | :-----------------------------------------------------------------------------: |
 |  <_TrackName_\_Mute>  |   Mute   |   Mutes the specified track (replace 'TrackName' with the actual track name).   |
@@ -84,6 +86,8 @@ Within Strudel Reactor, there are five categories of tags that can be used - CPS
 |  <global_band_pass>   |  Filter  |       Adjusts the Band/Mid Pass Frequency range through applying .bpf().        |
 |  <global_high_pass>   |  Filter  |         Adjusts the High Pass Frequency range through applying .hpf().          |
 
+</div>
+<br>
 <div align="center">
     <img src='readMeAssets/image-5.png'>
 </div>
@@ -129,3 +133,14 @@ Within Strudel Reactor, there are five categories of tags that can be used - CPS
 <div align="center">
     <img src='readMeAssets/image-5.png'>
 </div>
+
+## Acknowledgements
+
+This project has utilised:
+
+-   [React-Bootstrap](https://react-bootstrap.netlify.app/) (v3.0.0-beta.5)
+-   [Bootstrap](https://getbootstrap.com/) (v5.3)
+-   [Bootstrap Icons](https://icons.getbootstrap.com/) (v1.13.1)
+-   [react-circular-slider-svg](https://www.npmjs.com/package/react-circular-slider-svg) (v0.4.0)
+
+These third-party packages have been utilised throughout Strudel Reactor to prove the user wit hthe best visual experience that we can provide. Prior to adding these third-party packages to the project, checks were conducted to ensure that they met expectations and were a definitive requirement for the system.
