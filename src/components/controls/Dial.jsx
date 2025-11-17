@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CircularSliderWithChildren } from 'react-circular-slider-svg';
 
-export const Dial = ({ effectType, minValue, maxValue, handler }) => {
-    const [value, setValue] = useState(0);
+export const Dial = ({ effectType, minValue, maxValue, handler, value: propValue }) => {
+    const [value, setValue] = useState(propValue ?? 0);
+
+    useEffect(() => {
+        setValue(propValue ?? 0);
+    }, [propValue]);
 
     return (
         <div style={{ height: '125px' }}>

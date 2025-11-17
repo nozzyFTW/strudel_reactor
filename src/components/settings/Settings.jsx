@@ -53,6 +53,7 @@ export const Settings = ({
                         >
                             <JsonButtons
                                 trackEffectMap={trackEffectMap}
+                                setTrackEffectMap={setTrackEffectMap}
                                 handleProcessing={handleProcessing}
                             />
                         </Col>
@@ -92,6 +93,7 @@ export const Settings = ({
                             <Accordion.Body>
                                 <ReverbControls
                                     trackName="global"
+                                    trackEffectMap={trackEffectMap}
                                     setTrackEffectMap={setTrackEffectMap}
                                     setChangesActive={setChangesActive}
                                 />
@@ -103,6 +105,7 @@ export const Settings = ({
                                 <Accordion.Body>
                                     <ReverbControls
                                         trackName={track}
+                                        trackEffectMap={trackEffectMap}
                                         setTrackEffectMap={setTrackEffectMap}
                                         setChangesActive={setChangesActive}
                                     />
@@ -116,6 +119,7 @@ export const Settings = ({
                 <Accordion.Header>Filters</Accordion.Header>
                 <Accordion.Body>
                     <FilterControls
+                        trackEffectMap={trackEffectMap}
                         setTrackEffectMap={setTrackEffectMap}
                         setChangesActive={setChangesActive}
                     />
