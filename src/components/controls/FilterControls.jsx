@@ -1,6 +1,6 @@
 import { Dial } from './Dial';
 
-export const FilterControls = ({ setTrackEffectMap, setChangesActive }) => {
+export const FilterControls = ({ trackEffectMap, setTrackEffectMap, setChangesActive }) => {
     /**
      * Handle LPF Setting change event
      * @param {Number} newValue
@@ -55,11 +55,17 @@ export const FilterControls = ({ setTrackEffectMap, setChangesActive }) => {
         setChangesActive(true);
     };
 
+    const currentFilters = trackEffectMap?.['global']?.filter || {
+        low: 0,
+        band: 0,
+        high: 0,
+    };
+
     // Array of filter controls
     const filterControlList = [
-        { name: 'Low', handlerFn: handleLPFilterChange },
-        { name: 'Mid', handlerFn: handleBPFilterChange },
-        { name: 'High', handlerFn: handleHPFilterChange },
+        { name: 'Low', handlerFn: handleLPFilterChange, value: currentFilters.low },
+        { name: 'Mid', handlerFn: handleBPFilterChange, value: currentFilters.band },
+        { name: 'High', handlerFn: handleHPFilterChange, value: currentFilters.high },
     ];
 
     return (
@@ -71,6 +77,7 @@ export const FilterControls = ({ setTrackEffectMap, setChangesActive }) => {
                     minValue={0}
                     maxValue={20000}
                     handler={control.handlerFn}
+                    value={control.value}
                 />
             ))}
         </div>

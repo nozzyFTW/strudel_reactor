@@ -1,5 +1,10 @@
 import { Dial } from './Dial.jsx';
-export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive }) => {
+export const ReverbControls = ({
+    trackName,
+    trackEffectMap,
+    setTrackEffectMap,
+    setChangesActive,
+}) => {
     /**
      * Handle Room Reverb Setting change event
      * @param {Number} newValue
@@ -72,12 +77,39 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
         setChangesActive(true);
     };
 
+    const currentReverbSettings = trackEffectMap?.[trackName]?.reverb || {
+        room: 0,
+        roomSize: 0,
+        roomFade: 0,
+        roomLowPass: 0,
+    };
+
     // Array of reverb controls
     const reverbControlList = [
-        { name: 'Room', max: 1, handlerFn: handleRoomChange },
-        { name: 'Room Size', max: 10, handlerFn: handleRoomSizeChange },
-        { name: 'Room Fade', max: 20, handlerFn: handleRoomFadeChange },
-        { name: 'Low Pass', max: 20000, handlerFn: handleRoomLowPassChange },
+        {
+            name: 'Room',
+            max: 1,
+            handlerFn: handleRoomChange,
+            value: currentReverbSettings.room,
+        },
+        {
+            name: 'Room Size',
+            max: 10,
+            handlerFn: handleRoomSizeChange,
+            value: currentReverbSettings.roomSize,
+        },
+        {
+            name: 'Room Fade',
+            max: 20,
+            handlerFn: handleRoomFadeChange,
+            value: currentReverbSettings.roomFade,
+        },
+        {
+            name: 'Low Pass',
+            max: 20000,
+            handlerFn: handleRoomLowPassChange,
+            value: currentReverbSettings.roomLowPass,
+        },
     ];
 
     return (
@@ -89,6 +121,7 @@ export const ReverbControls = ({ trackName, setTrackEffectMap, setChangesActive 
                     minValue={0}
                     maxValue={control.max}
                     handler={control.handlerFn}
+                    value={control.value}
                 />
             ))}
         </div>
