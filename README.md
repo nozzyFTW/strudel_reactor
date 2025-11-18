@@ -21,6 +21,14 @@
 
 Welcome to **Strudel Reactor**, your Effects and Preprocessing Controller for [Strudel.cc](https://strudel.cc). **Strudel Reactor** is a Single Page Application (SPA) which meets all the demands needed to tune a Strudel soundtrack to your liking on the fly.
 
+<br>
+<div align="center">
+    <a href='https://youtu.be/kVRB57MVAhQ'>
+        <img src="https://img.shields.io/badge/Strudel%20Reactor%20Live%20Demo-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white">
+    </a>
+</div>
+<br>
+
 ### Built With
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) &nbsp;
@@ -93,7 +101,7 @@ Within Strudel Reactor, there are five categories of tags that can be used - CPS
 | :-------------------: | :------: | :-----------------------------------------------------------------------------: |
 |  <_TrackName_\_Mute>  |   Mute   |   Mutes the specified track (replace 'TrackName' with the actual track name).   |
 | <_TrackName_\_Volume> |  Volume  |                  Adjusts the postgain of the track specified.                   |
-|    <global_reverb>    |  Reverb  | Adjusts the global reverb properties (see [Reverb Controls](#reverb-controls)). |
+|    <global_reverb>    |  Reverb  | Adjusts the global reverb properties (see <ins>Reverb Controls</ins>). |
 | <_TrackName_\_reverb> |  Reverb  |                Adjusts the specified track's reverb properties.                 |
 |   <global_low_pass>   |  Filter  |          Adjusts the Low Pass Frequency range through applying .lpf().          |
 |  <global_band_pass>   |  Filter  |       Adjusts the Band/Mid Pass Frequency range through applying .bpf().        |
@@ -233,3 +241,4 @@ This project has utilised:
 -   [react-circular-slider-svg](https://www.npmjs.com/package/react-circular-slider-svg) (v0.4.0)
 
 These third-party packages have been utilised throughout Strudel Reactor to prove the user with the best visual experience that we can provide. Prior to adding these third-party packages to the project, checks were conducted to ensure that they met expectations and were a definitive requirement for the system.
+
