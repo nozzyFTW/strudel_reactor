@@ -10,9 +10,12 @@ export const MuteControls = ({
     setChangesActive,
 }) => {
     /**
-     * Handle Track Solo Setting change event
-     * @param {boolean} status TRUE equals Solo button turned on,
-     *                         FALSE equals Solo button turned off
+     * Handle Track Solo Setting change event.
+     * Should make track associated with Solo Button 'soloed' and
+     * update all other tracks to be muted.
+     *
+     * @param {boolean} status TRUE - Solo button turned on,
+     *                         FALSE - Solo button turned off
      */
     const handleSoloUpdate = (status) => {
         if (status) {

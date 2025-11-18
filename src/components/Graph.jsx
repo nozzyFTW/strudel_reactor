@@ -12,16 +12,21 @@ const extractDataFromLog = (data) => {
     // get gain from Strudel log (i.e. '... gain: 0.72643...')
     const match = str.match(/gain:\s*([0-9]+(?:\.[0-9]+)?)/i);
     if (match && match[1]) {
-        return parseFloat(match[1]);
+        // ensures maximum gain reading of 1
+        return parseFloat(match[1] > 1 ? 1 : match[1]);
     }
     return 0;
 };
 
 export const Graph = ({ graphData }) => {
-    const maxValue = 2;
+    // maximum visible data point on graph
+    const maxValue = 1;
 
     useEffect(() => {
+        // get d3 svg container
         const svg = d3.select('svg');
+
+        // clear svg data
         svg.selectAll('*').remove();
 
         let w = svg.node().getBoundingClientRect().width - 40;

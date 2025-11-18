@@ -55,6 +55,8 @@ export const FilterControls = ({ trackEffectMap, setTrackEffectMap, setChangesAc
         setChangesActive(true);
     };
 
+    // gets the value to pass through to dial.
+    // assists with JSON load functionality.
     const currentFilters = trackEffectMap?.['global']?.filter || {
         low: 0,
         band: 0,
