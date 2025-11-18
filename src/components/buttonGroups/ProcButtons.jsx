@@ -6,8 +6,10 @@ export const ProcButtons = ({ globalEditor, handleProcessing }) => {
      * @param {Number} newValue
      */
     const handleProcPlayButtonClick = () => {
+        // cannot handle play action if the globalEditor hasn't been loaded
         if (globalEditor != null) {
             handleProcessing();
+            // evaluate results in song playing
             globalEditor.evaluate();
         }
     };

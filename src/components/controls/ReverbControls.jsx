@@ -77,6 +77,8 @@ export const ReverbControls = ({
         setChangesActive(true);
     };
 
+    // gets the value to pass through to dial.
+    // assists with JSON load functionality.
     const currentReverbSettings = trackEffectMap?.[trackName]?.reverb || {
         room: 0,
         roomSize: 0,
